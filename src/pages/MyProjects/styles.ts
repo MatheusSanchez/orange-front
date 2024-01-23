@@ -1,5 +1,5 @@
 import styled from 'styled-components'
 
-export const DescobrirContainer = styled.div`
+export const MyProjectsContainer = styled.div`
   max-width: 80rem;
 `
