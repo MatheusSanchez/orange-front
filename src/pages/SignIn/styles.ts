@@ -36,6 +36,21 @@ export const SignInContent = styled.main`
     max-width: 800px;
     margin: 0 auto;
     padding: 0 4rem 0;
+
+    h2 {
+      display: none;
+    }
+  }
+
+  animation: opacidade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+
+  @keyframes opacidade {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 `
 
