@@ -1,13 +1,13 @@
-import * as React from 'react'
-import Box from '@mui/material/Box'
+import Logout from '@mui/icons-material/Logout'
+import Settings from '@mui/icons-material/Settings'
 import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import Settings from '@mui/icons-material/Settings'
-import Logout from '@mui/icons-material/Logout'
+import * as React from 'react'
 
 import avatarPlaceholder from '../../../assets/avatarPlaceholder.jpeg'
 
@@ -53,18 +53,6 @@ export default function AccountMenu() {
               height: 32,
               ml: -0.5,
               mr: 1,
-            },
-            '&::before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
-              zIndex: 0,
             },
           },
         }}

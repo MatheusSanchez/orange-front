@@ -1,3 +1,10 @@
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import { Badge, IconButton, Tooltip } from '@mui/material'
+import { Link } from 'react-router-dom'
+
+import logoOrangePortfolio from '../../assets/logoOrangePortfolio.png'
+import AccountMenu from './Avatar'
+import { MenuMobile } from './MenuMobile'
 import {
   HeaderContainer,
   HeaderContent,
@@ -5,19 +12,17 @@ import {
   LogoAndNavContainer,
   LogoContainer,
   NavContainer,
+  NavContainerMobile,
 } from './styles'
-
-import logoOrangePortfolio from '../../assets/logoOrangePortfolio.png'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import { Link } from 'react-router-dom'
-import { Badge, IconButton, Tooltip } from '@mui/material'
-import AccountMenu from './Avatar'
 
 export function Header() {
   return (
     <HeaderContainer>
       <HeaderContent>
         <LogoAndNavContainer>
+          <NavContainerMobile>
+            <MenuMobile />
+          </NavContainerMobile>
           <LogoContainer>
             <img src={logoOrangePortfolio} alt="" />
           </LogoContainer>

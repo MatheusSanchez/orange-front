@@ -12,18 +12,35 @@ export const HeaderContent = styled.div`
   justify-content: space-between;
   margin: 0 auto;
   padding: 1rem 1.88rem;
+
+  @media (max-width: 978px) {
+    padding: 1rem 1.88rem;
+    margin-left: -16px;
+  }
 `
 
 export const LogoAndNavContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 6.25rem;
+
+  @media (max-width: 978px) {
+    gap: 1rem;
+  }
 `
 
 export const LogoContainer = styled.div`
   img {
     width: 7rem;
     pointer-events: none;
+  }
+`
+
+export const NavContainerMobile = styled.div`
+  display: none;
+
+  @media (max-width: 978px) {
+    display: block;
   }
 `
 
@@ -52,6 +69,9 @@ export const NavContainer = styled.nav`
       }
     }
   }
+  @media (max-width: 978px) {
+    display: none;
+  }
 `
 
 export const InfoContainer = styled.div`
@@ -63,5 +83,9 @@ export const InfoContainer = styled.div`
     color: #fcfdff;
     width: 24px;
     height: 24px;
+  }
+
+  @media (max-width: 978px) {
+    gap: 0.5rem;
   }
 `

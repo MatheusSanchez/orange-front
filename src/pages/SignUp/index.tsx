@@ -1,3 +1,5 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 import {
   Button,
   FormControl,
@@ -7,6 +9,15 @@ import {
   OutlinedInput,
   TextField,
 } from '@mui/material'
+import Alert from '@mui/material/Alert'
+import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import * as z from 'zod'
+
+import imgSignUp from '../../assets/imgCadastroUpscale.jpg'
+import { api } from '../../lib/axios'
 import {
   FormContainer,
   SignUpContainer,
@@ -14,31 +25,55 @@ import {
   StyledDesktop,
   TitleContainer,
 } from './styles'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { useState } from 'react'
 
-import imgSignUp from '../../assets/imgCadastroUpscale.jpg'
+const registerFormSchema = z.object({
+  name: z.string(),
+  surname: z.string(),
+  email: z.string().email(),
+  password_hash: z.string(),
+})
 
-import { Helmet } from 'react-helmet-async'
-import { Link } from 'react-router-dom'
-
-import Alert from '@mui/material/Alert'
+type RegisterFormSchema = z.infer<typeof registerFormSchema>
 
 export function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+  const [showError, setShowError] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show)
-
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault()
   }
+  const navigate = useNavigate()
 
-  const handleSignUp = () => {
-    setShowAlert(true)
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<RegisterFormSchema>({
+    resolver: zodResolver(registerFormSchema),
+  })
+
+  async function handleCreateUser(data: RegisterFormSchema) {
+    try {
+      const email = data.email
+      const name = data.name
+      // eslint-disable-next-line camelcase
+      const password_hash = data.password_hash
+      const surname = data.surname
+
+      // eslint-disable-next-line camelcase
+      api.post('/user', { email, name, password_hash, surname })
+      setShowError(false)
+      setShowAlert(true)
+      setTimeout(() => navigate('/login'), 2000) // this settimeout needs to be removed and a loader added to the button
+    } catch (error: unknown) {
+      if (error instanceof Error && 'response' in error) {
+        setShowError(true)
+      }
+    }
   }
-
   return (
     <SignUpContainer>
       <img src={imgSignUp} alt="" />
@@ -53,8 +88,17 @@ export function SignUp() {
             Cadastro feito com sucesso
           </Alert>
         )}
+        {showError && (
+          <Alert
+            variant="filled"
+            severity="error"
+            onClose={() => setShowError(false)}
+          >
+            Erro ao fazer cadastro
+          </Alert>
+        )}
         <TitleContainer>Cadastre-se</TitleContainer>
-        <FormContainer>
+        <FormContainer onSubmit={handleSubmit(handleCreateUser)}>
           <StyledDesktop>
             <TextField
               variant="outlined"
@@ -62,8 +106,8 @@ export function SignUp() {
               fullWidth
               id="nome"
               label="Nome"
-              name="nome"
               autoComplete="nome"
+              {...register('name')}
             />
             <TextField
               variant="outlined"
@@ -71,8 +115,8 @@ export function SignUp() {
               fullWidth
               id="sobrenome"
               label="Sobrenome"
-              name="sobrenome"
               autoComplete="sobrenome"
+              {...register('surname')}
             />
           </StyledDesktop>
           <TextField
@@ -81,9 +125,9 @@ export function SignUp() {
             fullWidth
             id="email"
             label="Email"
-            name="email"
             type="email"
             autoComplete="email"
+            {...register('email')}
           />
 
           <FormControl variant="outlined" fullWidth>
@@ -95,8 +139,8 @@ export function SignUp() {
               required
               fullWidth
               label="Password"
-              name="Password"
               type={showPassword ? 'text' : 'password'}
+              {...register('password_hash')}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -118,7 +162,7 @@ export function SignUp() {
             style={{
               backgroundColor: '#F52',
             }}
-            onClick={handleSignUp}
+            disabled={isSubmitting}
           >
             Cadastre-se
           </Button>
