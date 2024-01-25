@@ -1,10 +1,6 @@
 import { Box } from '@mui/material'
 import styled from 'styled-components'
 
-export const MyProjectsContainer = styled.div`
-  max-width: 80rem;
-`
-
 export const ButtonAndModalContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -42,11 +38,42 @@ export const ModalBox = styled(Box)`
   }
 `
 
+export const FormContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: left;
+`
+
+export const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (min-width: 978px) {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1.5rem;
+  }
+`
+
+export const InputsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: left;
+
+  @media (min-width: 978px) {
+    width: 50%;
+  }
+`
+
 export const UploadFileContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 1.4rem;
 
   @media (min-width: 978px) {
     width: 50%;
@@ -81,5 +108,39 @@ export const UploadFileInput = styled.div`
 
   @media (min-width: 978px) {
     height: 19.4rem;
+  }
+`
+
+export const LabelContent = styled.div`
+  background: ${(props) => props.theme['color-neutral-70']};
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  gap: 1rem;
+
+  p {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 0.875rem;
+    letter-spacing: 0.01563rem;
+    opacity: 0.6;
+    color: ${(props) => props.theme['color-neutral-120']};
+  }
+`
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  @media (min-width: 978px) {
   }
 `

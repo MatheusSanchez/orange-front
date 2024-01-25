@@ -4,6 +4,7 @@ export const CardProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin: 1.2rem 0;
 
   @media (min-width: 978px) {
     display: grid;
