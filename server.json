@@ -1,0 +1,43 @@
+{
+  "user": [
+    {
+      "id": "fadfa-fasdf-51659",
+      "name": "Nome do",
+      "surname": "Usuario",
+      "email": "user@email.com",
+      "password_hash": "9481656985454986165156",
+      "created_at": "2024-01-14T21:24:12.516Z",
+      "updated_at": "2024-01-14T21:24:12.516Z"
+    },
+    {
+      "id": "dasda-dasdas-516dda59",
+      "name": "Nome do",
+      "surname": "Usuario 2",
+      "email": "user2@email.com",
+      "password_hash": "dasdas5d14a57a4d15a",
+      "created_at": "2024-01-14T21:24:12.516Z",
+      "updated_at": "2024-01-14T21:24:12.516Z"
+    },
+    {
+      "id": "f4fa",
+      "email": "aiudaiu@fakdfao.com",
+      "name": "Teste",
+      "password_hash": "123132123",
+      "surname": "Surname"
+    },
+    {
+      "id": "8e92",
+      "email": "email.aikfajsd@foadinfo.com",
+      "name": "salvador ",
+      "password_hash": "oprjadefopiajodpfijaopfj",
+      "surname": "dali"
+    },
+    {
+      "id": "f085",
+      "email": "adsfasdfafd@fsdapfkm.caposd",
+      "name": "ffadf",
+      "password_hash": "2431312",
+      "surname": "fadfa"
+    }
+  ]
+}
