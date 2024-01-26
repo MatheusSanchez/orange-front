@@ -30,7 +30,7 @@ const registerFormSchema = z.object({
   name: z.string(),
   surname: z.string(),
   email: z.string().email(),
-  password_hash: z.string(),
+  password: z.string(),
 })
 
 type RegisterFormSchema = z.infer<typeof registerFormSchema>
@@ -60,11 +60,11 @@ export function SignUp() {
       const email = data.email
       const name = data.name
       // eslint-disable-next-line camelcase
-      const password_hash = data.password_hash
+      const password = data.password
       const surname = data.surname
 
       // eslint-disable-next-line camelcase
-      api.post('/user', { email, name, password_hash, surname })
+      api.post('/user', { email, name, password, surname })
       setShowError(false)
       setShowAlert(true)
       setTimeout(() => navigate('/login'), 2000) // this settimeout needs to be removed and a loader added to the button
@@ -140,7 +140,7 @@ export function SignUp() {
               fullWidth
               label="Password"
               type={showPassword ? 'text' : 'password'}
-              {...register('password_hash')}
+              {...register('password')}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
