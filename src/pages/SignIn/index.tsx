@@ -11,7 +11,7 @@ import {
 import { useContext, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import * as z from 'zod'
 
 import googleIcon from '../../assets/googleIcon.svg'
@@ -55,11 +55,9 @@ export function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { handleSignIn } = useContext(AuthContext)
-  const navigate = useNavigate()
 
-  function returnUser() {
+  function signIn() {
     handleSignIn(email, password)
-    setTimeout(() => navigate('/'), 1000) // this settimeout needs to be removed and a loader added to the button
   }
 
   return (
@@ -75,7 +73,7 @@ export function SignIn() {
           </GoogleButton>
         </GoogleButtonContainer>
         <TextContainer>Faça login com email</TextContainer>
-        <FormContainer onSubmit={handleSubmit(returnUser)}>
+        <FormContainer onSubmit={handleSubmit(signIn)}>
           <TextField
             variant="outlined"
             required

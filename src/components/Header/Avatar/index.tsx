@@ -8,8 +8,10 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 import * as React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import avatarPlaceholder from '../../../assets/avatarPlaceholder.jpeg'
+import { useAuth } from '../../../hooks/auth'
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -20,6 +22,15 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const { handleSignOut } = useAuth()
+  const navigate = useNavigate()
+
+  function signOut() {
+    navigate('/')
+    handleSignOut()
+  }
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -65,7 +76,7 @@ export default function AccountMenu() {
           </ListItemIcon>
           Editar perfil
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={signOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
