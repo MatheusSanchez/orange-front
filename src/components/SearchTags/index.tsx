@@ -11,6 +11,11 @@ export function SearchTags() {
       name="searchTags"
       type="tags"
       autoComplete="tags"
+      style={
+        {
+          // width: '31.25rem',
+        }
+      }
     />
   )
 }

@@ -1,13 +1,13 @@
 import { Avatar } from '@mui/material'
+
+import avatarPlaceholder from '../../assets/avatarPlaceholder.jpeg'
+import { ButtonAndModal } from '../ButtonAndModal'
 import {
   AvatarContainer,
   BtnContainer,
   CardProfileContainer,
   UserInfoContainer,
 } from './styles'
-
-import avatarPlaceholder from '../../assets/avatarPlaceholder.jpeg'
-import { ButtonAndModal } from '../ButtonAndModal'
 
 export function CardProfile() {
   return (

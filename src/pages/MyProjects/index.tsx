@@ -1,12 +1,17 @@
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import React, { useState } from 'react'
-import { CardProfile } from '../../components/CardProfile'
-import { Typography } from '@mui/material'
-import { SearchTags } from '../../components/SearchTags'
-import { UploadFileContent, UploadFileInput } from './styles'
 
 import insertImage from '../../assets/insertProjects.png'
+import { CardProfile } from '../../components/CardProfile'
 import { ModalCreateNewProject } from '../../components/ModalCreateNewProject'
+import { SearchTags } from '../../components/SearchTags'
+import {
+  EmptyProject,
+  MyProjectsContainer,
+  ProjectsContainer,
+  StyledTypography,
+  UploadFileContent,
+} from './styles'
 
 export function MyProjects() {
   const [openModal, setOpenModal] = useState(false)
@@ -20,21 +25,25 @@ export function MyProjects() {
   }
 
   return (
-    <React.Fragment>
+    <MyProjectsContainer>
       <Helmet title="Meus Projetos" />
+
       <CardProfile />
 
-      <Typography variant="h5" component="h5">
-        Meus Projetos
-      </Typography>
-      <SearchTags />
-      <UploadFileContent>
-        <UploadFileInput>
-          <img src={insertImage} alt="" onClick={handleOpenModal} />
-        </UploadFileInput>
-      </UploadFileContent>
+      <div style={{ marginTop: '0px' }}>
+        <StyledTypography variant="h5">Meus Projetos</StyledTypography>
+        <SearchTags />
+
+        <ProjectsContainer>
+          <UploadFileContent>
+            <img src={insertImage} alt="" onClick={handleOpenModal} />
+          </UploadFileContent>
+          <EmptyProject />
+          <EmptyProject />
+        </ProjectsContainer>
+      </div>
 
       <ModalCreateNewProject open={openModal} handleClose={handleCloseModal} />
-    </React.Fragment>
+    </MyProjectsContainer>
   )
 }
