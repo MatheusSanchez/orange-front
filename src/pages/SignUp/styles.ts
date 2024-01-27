@@ -22,6 +22,16 @@ export const SignUpContainer = styled.div`
       display: block;
       max-height: 100vh;
     }
+    animation: opacidade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+
+    @keyframes opacidade {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
   }
 `
 
@@ -35,17 +45,6 @@ export const SignUpContent = styled.main`
     max-width: 800px;
     margin: 0 auto;
     padding: 0 4rem 0;
-  }
-
-  animation: opacidade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-
-  @keyframes opacidade {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
   }
 
   h2 {

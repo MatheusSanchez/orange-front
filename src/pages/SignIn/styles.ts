@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import { Button } from '@mui/material'
+import styled from 'styled-components'
 
 export const SignInContainer = styled.div`
   margin: 6.81rem auto 0;
@@ -23,6 +23,17 @@ export const SignInContainer = styled.div`
       display: block;
       max-height: 100vh;
     }
+
+    animation: opacidade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+
+    @keyframes opacidade {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
   }
 `
 
@@ -39,17 +50,6 @@ export const SignInContent = styled.main`
 
     h2 {
       display: none;
-    }
-  }
-
-  animation: opacidade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-
-  @keyframes opacidade {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
     }
   }
 `
@@ -136,6 +136,7 @@ export const TextContainer = styled.p`
 
   @media (min-width: 978px) {
     font-size: 1.5rem;
+    margin-top: 13px;
   }
 `
 
