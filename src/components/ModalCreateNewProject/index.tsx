@@ -1,4 +1,7 @@
 import { Collections } from '@mui/icons-material'
+import { Button, Modal, TextField } from '@mui/material'
+import { useState } from 'react'
+
 import {
   ButtonsContainer,
   FormContainer,
@@ -9,8 +12,6 @@ import {
   UploadFileContent,
   UploadFileInput,
 } from './styles'
-import { Button, Modal, TextField } from '@mui/material'
-import { useState } from 'react'
 
 interface ModalCreateNewProjectProps {
   open: boolean
