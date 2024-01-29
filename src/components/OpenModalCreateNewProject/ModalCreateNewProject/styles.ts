@@ -31,10 +31,18 @@ export const ModalBox = styled(Box)`
     line-height: 1rem;
     letter-spacing: 0.00938rem;
     color: ${(props) => props.theme['color-neutral-110']};
+    padding: 0 0.66rem;
   }
 
   @media (min-width: 978px) {
     width: 55rem;
+  }
+
+  @media (max-width: 978px) {
+    width: 90%;
+    max-width: 400px;
+    overflow-y: auto;
+    max-height: 80vh;
   }
 `
 
