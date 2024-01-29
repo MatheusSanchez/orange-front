@@ -7,6 +7,7 @@ export const CardProfileContainer = styled.div`
   margin: 1.2rem 0;
 
   @media (min-width: 978px) {
+    max-width: 24rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
@@ -25,7 +26,7 @@ export const AvatarContainer = styled.div`
   }
 `
 
-export const UserInfoContainer = styled.div`
+export const UserDataContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -35,6 +36,10 @@ export const UserInfoContainer = styled.div`
     font-weight: 400;
     line-height: 1.5rem;
     color: ${(props) => props.theme['color-neutral-120']};
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
   }
 
   span {
@@ -50,7 +55,7 @@ export const UserInfoContainer = styled.div`
   }
 `
 
-export const BtnContainer = styled.div`
+export const ButtonContainer = styled.div`
   @media (min-width: 978px) {
     grid-area: C;
   }

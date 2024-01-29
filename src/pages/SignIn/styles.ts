@@ -140,19 +140,16 @@ export const TextContainer = styled.p`
   }
 `
 
-export const BtnContainer = styled(Button)`
-  background: ${(props) => props.theme['color-secondary-100']};
-  color: ${(props) => props.theme['color-neutral-60']};
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.625rem;
-  letter-spacing: 0.02rem;
-  text-transform: uppercase;
-  margin-top: 1rem;
-  padding: 0.5rem 1.38rem;
+export const StyledButton = styled(Button)`
+  background: ${(props) => props.theme['color-secondary-100']} !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  &:hover {
-    background-color: ${(props) => props.theme['color-secondary-110']};
+  &:disabled {
+    background: ${(props) => props.theme['btn-gray']} !important;
+    color: ${(props) => props.theme['btn-text-gray']} !important;
+    cursor: not-allowed !important;
   }
 `
 

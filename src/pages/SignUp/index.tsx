@@ -1,7 +1,8 @@
+import 'react-toastify/dist/ReactToastify.css'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import {
-  Button,
   FormControl,
   IconButton,
   InputAdornment,
@@ -9,19 +10,21 @@ import {
   OutlinedInput,
   TextField,
 } from '@mui/material'
-import Alert from '@mui/material/Alert'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { TailSpin } from 'react-loader-spinner'
+import { Link } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
 import * as z from 'zod'
 
 import imgSignUp from '../../assets/imgCadastroUpscale.jpg'
-import { api } from '../../lib/axios'
+import { useAuth } from '../../hooks/auth'
 import {
   FormContainer,
   SignUpContainer,
   SignUpContent,
+  StyledButton,
   StyledDesktop,
   TitleContainer,
 } from './styles'
@@ -30,73 +33,68 @@ const registerFormSchema = z.object({
   name: z.string(),
   surname: z.string(),
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(6),
 })
 
 type RegisterFormSchema = z.infer<typeof registerFormSchema>
 
 export function SignUp() {
+  const { handleSignUp } = useAuth()
+
   const [showPassword, setShowPassword] = useState(false)
-  const [showAlert, setShowAlert] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const [loadingAuth, setLoadingAuth] = useState(false)
+
   const handleClickShowPassword = () => setShowPassword((show) => !show)
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault()
   }
-  const navigate = useNavigate()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<RegisterFormSchema>({
+  const { register, handleSubmit } = useForm<RegisterFormSchema>({
     resolver: zodResolver(registerFormSchema),
   })
 
   async function handleCreateUser(data: RegisterFormSchema) {
-    try {
-      const email = data.email
-      const name = data.name
-      // eslint-disable-next-line camelcase
-      const password = data.password
-      const surname = data.surname
+    setLoadingAuth(true)
 
-      // eslint-disable-next-line camelcase
-      api.post('/user', { email, name, password, surname })
-      setShowError(false)
-      setShowAlert(true)
-      setTimeout(() => navigate('/login'), 2000) // this settimeout needs to be removed and a loader added to the button
-    } catch (error: unknown) {
-      if (error instanceof Error && 'response' in error) {
-        setShowError(true)
+    const name = data.name
+    const surname = data.surname
+    const email = data.email
+    const password = data.password
+
+    try {
+      await handleSignUp(name, surname, email, password)
+      toast.success(`Usuário ${name} cadastrado com sucesso!`, {
+        theme: 'colored',
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`Erro ao cadastrar usuário: ${error.message}`)
+      } else {
+        toast.error(`Erro desconhecido ao cadastrar usuário.`)
       }
+    } finally {
+      setLoadingAuth(false)
     }
   }
   return (
     <SignUpContainer>
       <img src={imgSignUp} alt="" />
       <SignUpContent>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
         <Helmet title="Cadastro" />
-        {showAlert && (
-          <Alert
-            variant="filled"
-            severity="success"
-            onClose={() => setShowAlert(false)}
-          >
-            Cadastro feito com sucesso
-          </Alert>
-        )}
-        {showError && (
-          <Alert
-            variant="filled"
-            severity="error"
-            onClose={() => setShowError(false)}
-          >
-            Erro ao fazer cadastro
-          </Alert>
-        )}
         <TitleContainer>Cadastre-se</TitleContainer>
         <FormContainer onSubmit={handleSubmit(handleCreateUser)}>
           <StyledDesktop>
@@ -155,17 +153,19 @@ export function SignUp() {
               }
             />
           </FormControl>
-          <Button
-            type="submit"
+          <StyledButton
             fullWidth
+            type="submit"
             variant="contained"
-            style={{
-              backgroundColor: '#F52',
-            }}
-            disabled={isSubmitting}
+            disabled={loadingAuth}
+            startIcon={
+              loadingAuth ? (
+                <TailSpin width={12} height={12} color="#00000061" />
+              ) : null
+            }
           >
-            Cadastre-se
-          </Button>
+            {loadingAuth ? 'Cadastrando...' : 'Cadastre-se'}
+          </StyledButton>
           <span>
             <Link to="/login">Fazer Login</Link>
           </span>

@@ -1,3 +1,5 @@
+import 'react-toastify/dist/ReactToastify.css'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import {
@@ -8,22 +10,24 @@ import {
   OutlinedInput,
   TextField,
 } from '@mui/material'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
+import { TailSpin } from 'react-loader-spinner'
 import { Link } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
 import * as z from 'zod'
 
 import googleIcon from '../../assets/googleIcon.svg'
 import imgLoginUp from '../../assets/imgLoginUpscale.jpg'
-import { AuthContext } from '../../hooks/auth'
+import { useAuth } from '../../hooks/auth'
 import {
-  BtnContainer,
   FormContainer,
   GoogleButton,
   GoogleButtonContainer,
   SignInContainer,
   SignInContent,
+  StyledButton,
   TextContainer,
   TitleContainer,
 } from './styles'
@@ -36,7 +40,13 @@ const loginFormSchema = z.object({
 type LoginFormSchema = z.infer<typeof loginFormSchema>
 
 export function SignIn() {
+  const { handleSignIn } = useAuth()
+
   const [showPassword, setShowPassword] = useState(false)
+  const [loadingAuth, setLoadingAuth] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
   const handleClickShowPassword = () => setShowPassword((show) => !show)
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -44,26 +54,41 @@ export function SignIn() {
     event.preventDefault()
   }
 
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<LoginFormSchema>({
+  const { register, handleSubmit } = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
   })
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { handleSignIn } = useContext(AuthContext)
-
-  function signIn() {
-    handleSignIn(email, password)
+  async function signIn() {
+    setLoadingAuth(true)
+    try {
+      await handleSignIn(email, password)
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`Erro ao realizar login: ${error.message}`)
+      } else {
+        toast.error(`Erro desconhecido ao realizar login.`)
+      }
+    } finally {
+      setLoadingAuth(false)
+    }
   }
 
   return (
     <SignInContainer>
       <img src={imgLoginUp} alt="" />
       <SignInContent>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
         <Helmet title="Login" />
         <TitleContainer>Entre no Orange Portfólio</TitleContainer>
         <GoogleButtonContainer>
@@ -114,17 +139,19 @@ export function SignIn() {
               }
             />
           </FormControl>
-          <BtnContainer
-            type="submit"
+          <StyledButton
             fullWidth
+            type="submit"
             variant="contained"
-            disabled={isSubmitting}
-            style={{
-              backgroundColor: '#F52',
-            }}
+            disabled={loadingAuth}
+            startIcon={
+              loadingAuth ? (
+                <TailSpin width={12} height={12} color="#00000061" />
+              ) : null
+            }
           >
-            Entrar
-          </BtnContainer>
+            {loadingAuth ? 'Entrando...' : 'Entrar'}
+          </StyledButton>
           <span>
             <Link to="/cadastro">Cadastre-se</Link>
           </span>

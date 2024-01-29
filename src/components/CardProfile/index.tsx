@@ -1,15 +1,18 @@
 import { Avatar } from '@mui/material'
 
-import avatarPlaceholder from '../../assets/avatarPlaceholder.jpeg'
-import { ButtonAndModal } from '../ButtonAndModal'
+import avatarPlaceholder from '../../assets/avatarPlaceholder.png'
+import { useAuth } from '../../hooks/auth'
+import { ButtonOpenModalCreateNewProject } from './ButtonOpenModalCreateNewProject'
 import {
   AvatarContainer,
-  BtnContainer,
+  ButtonContainer,
   CardProfileContainer,
-  UserInfoContainer,
+  UserDataContainer,
 } from './styles'
 
 export function CardProfile() {
+  const { userData } = useAuth()
+
   return (
     <CardProfileContainer>
       <AvatarContainer>
@@ -19,13 +22,17 @@ export function CardProfile() {
           sx={{ width: 122, height: 122 }}
         />
       </AvatarContainer>
-      <UserInfoContainer>
-        <h2>Camila Soares</h2>
+
+      <UserDataContainer>
+        <h2>
+          {userData?.user.name} {userData?.user.surname}
+        </h2>
         <span>Brasil</span>
-      </UserInfoContainer>
-      <BtnContainer>
-        <ButtonAndModal />
-      </BtnContainer>
+      </UserDataContainer>
+
+      <ButtonContainer>
+        <ButtonOpenModalCreateNewProject />
+      </ButtonContainer>
     </CardProfileContainer>
   )
 }
