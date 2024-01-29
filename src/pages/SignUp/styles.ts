@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import styled from 'styled-components'
 
 export const SignUpContainer = styled.div`
@@ -111,5 +112,15 @@ export const FormContainer = styled.form`
         color: ${(props) => props.theme['color-neutral-110']};
       }
     }
+  }
+`
+
+export const StyledButton = styled(Button)`
+  background: ${(props) => props.theme['color-secondary-100']} !important;
+
+  &:disabled {
+    background: ${(props) => props.theme['btn-gray']} !important;
+    color: ${(props) => props.theme['btn-text-gray']} !important;
+    cursor: not-allowed;
   }
 `

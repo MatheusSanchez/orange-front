@@ -6,7 +6,6 @@ import { AuthRoutes } from './auth.routes'
 
 export function Routes() {
   const { userData } = useAuth()
-  console.log(userData?.token)
   return (
     <BrowserRouter>
       {userData?.token ? <AppRoutes /> : <AuthRoutes />}

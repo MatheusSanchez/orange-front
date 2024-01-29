@@ -1,6 +1,6 @@
 import { Collections } from '@mui/icons-material'
 import { Button, Modal, TextField } from '@mui/material'
-import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 
 import {
   ButtonsContainer,
@@ -15,31 +15,29 @@ import {
 
 interface ModalCreateNewProjectProps {
   open: boolean
+  preview: string | undefined
+  setPreview: React.Dispatch<React.SetStateAction<string | undefined>>
   handleClose: () => void
 }
 
-export function ModalCreateNewProject({
-  open,
-  handleClose,
-}: ModalCreateNewProjectProps) {
-  const [preview, setPreview] = useState<string | undefined>(undefined)
-
+export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
   function handleChangePreview(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
 
     if (file) {
       const imagePreview = URL.createObjectURL(file)
-      setPreview(imagePreview)
+      props.setPreview(imagePreview)
     }
   }
 
   return (
     <Modal
-      open={open}
-      onClose={handleClose}
+      open={props.open}
+      onClose={props.handleClose}
       aria-labelledby="Adicionar projeto"
     >
       <ModalBox>
+        <Helmet title="Adicionar projeto" />
         <h2>Adicionar projeto</h2>
         <FormContainer>
           <MainContainer>
@@ -87,7 +85,7 @@ export function ModalCreateNewProject({
             <UploadFileContent>
               <p>Selecione o conteúdo que você deseja fazer upload</p>
               <UploadFileInput>
-                <img src={preview} alt="" />
+                <img src={props.preview} alt="" />
                 <input
                   type="file"
                   name="chooseFile"
@@ -98,7 +96,7 @@ export function ModalCreateNewProject({
                 />
                 <label htmlFor="chooseFile">
                   <LabelContent
-                    style={{ opacity: preview !== undefined ? 0 : 1 }}
+                    style={{ opacity: props.preview !== undefined ? 0 : 1 }}
                   >
                     <Collections
                       sx={{
@@ -130,7 +128,7 @@ export function ModalCreateNewProject({
 
             <Button
               variant="contained"
-              onClick={handleClose}
+              onClick={props.handleClose}
               style={{
                 backgroundColor: '#0000001f',
                 color: '#00000061',

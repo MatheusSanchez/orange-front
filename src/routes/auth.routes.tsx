@@ -9,7 +9,7 @@ export function AuthRoutes() {
       <Route>
         <Route path="/cadastro" element={<SignUp />} />,
         <Route path="/login" element={<SignIn />} />,
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/login" />} />
       </Route>
     </Routes>
   )

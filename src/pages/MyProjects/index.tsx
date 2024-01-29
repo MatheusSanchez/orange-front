@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 
-import insertImage from '../../assets/insertProjects.png'
 import { CardProfile } from '../../components/CardProfile'
-import { ModalCreateNewProject } from '../../components/ModalCreateNewProject'
+import { OpenModalCreateNewProject } from '../../components/OpenModalCreateNewProject'
 import { SearchTags } from '../../components/SearchTags'
+import { UploadFileContent } from '../../components/UploadFileContent'
+import { EmptyFileContent } from '../../components/UploadFileContent/EmptyFileContent'
 import {
-  EmptyProject,
+  CardProfileContainer,
+  InputContainer,
+  MainContainer,
   MyProjectsContainer,
   ProjectsContainer,
   StyledTypography,
-  UploadFileContent,
 } from './styles'
 
 export function MyProjects() {
@@ -20,30 +22,35 @@ export function MyProjects() {
     setOpenModal(true)
   }
 
-  const handleCloseModal = () => {
-    setOpenModal(false)
-  }
-
   return (
     <MyProjectsContainer>
       <Helmet title="Meus Projetos" />
+      <CardProfileContainer>
+        <CardProfile />
+      </CardProfileContainer>
 
-      <CardProfile />
-
-      <div style={{ marginTop: '0px' }}>
-        <StyledTypography variant="h5">Meus Projetos</StyledTypography>
-        <SearchTags />
+      <MainContainer>
+        <InputContainer>
+          <StyledTypography variant="h5">Meus Projetos</StyledTypography>
+          <SearchTags />
+        </InputContainer>
 
         <ProjectsContainer>
-          <UploadFileContent>
-            <img src={insertImage} alt="" onClick={handleOpenModal} />
-          </UploadFileContent>
-          <EmptyProject />
-          <EmptyProject />
-        </ProjectsContainer>
-      </div>
+          {/* {userData?.user.projects !== null ? (
+            <UploadFileContent onClick={handleOpenModal} />
+          ) : (
+            'aqui seria um map com todos os projetos'
+          )} */}
 
-      <ModalCreateNewProject open={openModal} handleClose={handleCloseModal} />
+          <UploadFileContent onClick={handleOpenModal} />
+          <EmptyFileContent />
+          <EmptyFileContent />
+        </ProjectsContainer>
+      </MainContainer>
+      <OpenModalCreateNewProject
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </MyProjectsContainer>
   )
 }

@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip'
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import avatarPlaceholder from '../../../assets/avatarPlaceholder.jpeg'
+import avatarPlaceholder from '../../../assets/avatarPlaceholder.png'
 import { useAuth } from '../../../hooks/auth'
 
 export default function AccountMenu() {
@@ -23,12 +23,12 @@ export default function AccountMenu() {
     setAnchorEl(null)
   }
 
-  const { handleSignOut } = useAuth()
+  const { handleLogout } = useAuth()
   const navigate = useNavigate()
 
   function signOut() {
     navigate('/')
-    handleSignOut()
+    handleLogout()
   }
 
   return (
@@ -67,8 +67,8 @@ export default function AccountMenu() {
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
           <ListItemIcon>

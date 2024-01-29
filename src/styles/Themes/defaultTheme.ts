@@ -14,6 +14,7 @@ export const defaultTheme = {
   'color-secondary-130': '#662200',
 
   'color-neutral-60': '#FCFDFF',
+  'color-neutral-65': '#e6e9f233',
   'color-neutral-70': '#E6E9F2',
   'color-neutral-80': '#C2C4CC',
   'color-neutral-90': '#A1A3AA',
@@ -57,4 +58,7 @@ export const defaultTheme = {
   'color-info-110': '#183594',
   'color-info-120': '#0F2477',
   'color-info-130': '#091862',
+
+  'btn-gray': '#0000001f',
+  'btn-text-gray': '#00000061',
 }

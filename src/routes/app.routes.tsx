@@ -10,7 +10,7 @@ export function AppRoutes() {
       <Route element={<AppLayout />}>
         <Route path="/meus-projetos" element={<MyProjects />} />,
         <Route path="/descobrir" element={<Feed />} />,
-        <Route path="*" element={<Navigate to="/descobrir" />} />
+        <Route path="*" element={<Navigate to="/meus-projetos" />} />
       </Route>
     </Routes>
   )
