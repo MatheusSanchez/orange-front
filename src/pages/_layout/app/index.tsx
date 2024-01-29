@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
-import { AppLayoutContainer, OutletContainer } from './styles'
+
 import { Header } from '../../../components/Header'
+import { AppLayoutContainer, OutletContainer } from './styles'
 
 export function AppLayout() {
   return (
