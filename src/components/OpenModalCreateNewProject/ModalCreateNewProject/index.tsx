@@ -1,7 +1,9 @@
 import { Collections } from '@mui/icons-material'
 import { Button, Modal, TextField } from '@mui/material'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 
+import { OpenModalViewProject } from '../../OpenModalViewProject'
 import {
   ButtonsContainer,
   FormContainer,
@@ -21,13 +23,34 @@ interface ModalCreateNewProjectProps {
 }
 
 export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
+  const [projectInfo, setProjectInfo] = useState({
+    title: '',
+    tags: '',
+    link: '',
+    description: '',
+  })
+
+  const [imageBanner, setImageBanner] = useState('')
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target
+    setProjectInfo((prev) => ({ ...prev, [name]: value }))
+  }
+
   function handleChangePreview(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
 
     if (file) {
       const imagePreview = URL.createObjectURL(file)
       props.setPreview(imagePreview)
+      setImageBanner(imagePreview)
     }
+  }
+
+  const [openModal, setOpenModal] = useState(false)
+
+  const handleOpenModal = () => {
+    setOpenModal(true)
   }
 
   return (
@@ -50,6 +73,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="title"
                 name="title"
                 label="Título"
+                value={projectInfo.title}
+                onChange={handleChange}
               />
 
               <TextField
@@ -60,6 +85,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="tags"
                 name="tags"
                 label="Tags"
+                value={projectInfo.tags}
+                onChange={handleChange}
               />
 
               <TextField
@@ -69,6 +96,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="link"
                 name="link"
                 label="Link"
+                value={projectInfo.link}
+                onChange={handleChange}
               />
 
               <TextField
@@ -79,6 +108,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="description"
                 name="description"
                 label="Descrição"
+                value={projectInfo.description}
+                onChange={handleChange}
               />
             </InputsContainer>
 
@@ -113,7 +144,9 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
             </UploadFileContent>
           </MainContainer>
 
-          <span>Visualizar publicação</span>
+          <a style={{ cursor: 'pointer' }} onClick={handleOpenModal}>
+            Visualizar publicação
+          </a>
 
           <ButtonsContainer>
             <Button
@@ -139,6 +172,12 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
             </Button>
           </ButtonsContainer>
         </FormContainer>
+        <OpenModalViewProject
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          projectInfo={projectInfo}
+          imageBanner={imageBanner}
+        />
       </ModalBox>
     </Modal>
   )
