@@ -1,11 +1,16 @@
-import { useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { format } from 'date-fns'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 
+import { CardMyProject } from '../../components/CardMyProject'
 import { CardProfile } from '../../components/CardProfile'
 import { OpenModalCreateNewProject } from '../../components/OpenModalCreateNewProject'
 import { SearchTags } from '../../components/SearchTags'
 import { UploadFileContent } from '../../components/UploadFileContent'
 import { EmptyFileContent } from '../../components/UploadFileContent/EmptyFileContent'
+import { useAuth } from '../../hooks/auth'
+import { useProjects } from '../../hooks/userProjects'
 import {
   CardProfileContainer,
   InputContainer,
@@ -22,6 +27,15 @@ export function MyProjects() {
     setOpenModal(true)
   }
 
+  const { getUserProjects, projectsData } = useProjects()
+  const { userData } = useAuth()
+
+  useEffect(() => {
+    if (userData?.user.id) {
+      getUserProjects(userData?.user.id)
+    }
+  }, [])
+
   return (
     <MyProjectsContainer>
       <Helmet title="Meus Projetos" />
@@ -36,15 +50,22 @@ export function MyProjects() {
         </InputContainer>
 
         <ProjectsContainer>
-          {/* {userData?.user.projects !== null ? (
-            <UploadFileContent onClick={handleOpenModal} />
+          {projectsData.length === 0 ? (
+            <>
+              <UploadFileContent onClick={handleOpenModal} />
+              <EmptyFileContent />
+              <EmptyFileContent />
+            </>
           ) : (
-            'aqui seria um map com todos os projetos'
-          )} */}
-
-          <UploadFileContent onClick={handleOpenModal} />
-          <EmptyFileContent />
-          <EmptyFileContent />
+            projectsData.map((project) => (
+              <CardMyProject
+                key={project.id}
+                userName={userData?.user.name}
+                date={format(new Date(project.created_at), 'dd/MM')}
+                tags={project.tags}
+              />
+            ))
+          )}
         </ProjectsContainer>
       </MainContainer>
       <OpenModalCreateNewProject
