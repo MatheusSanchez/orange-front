@@ -1,7 +1,10 @@
 import { Collections } from '@mui/icons-material'
 import { Button, Modal, TextField } from '@mui/material'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 
+import { useAuth } from '../../../hooks/auth'
+import { api } from '../../../lib/axios'
 import {
   ButtonsContainer,
   FormContainer,
@@ -21,13 +24,41 @@ interface ModalCreateNewProjectProps {
 }
 
 export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
+  // const [imgPortfolio, setImgPortfolio] = useState<File | null>(null)
+  const [tags, setTags] = useState<string[]>([])
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [link, setLink] = useState('')
+
   function handleChangePreview(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
 
     if (file) {
       const imagePreview = URL.createObjectURL(file)
       props.setPreview(imagePreview)
+      // setImgPortfolio(file)
     }
+  }
+
+  const { userData } = useAuth()
+
+  async function handleCreateNewProject() {
+    await api.post(`/user/${userData?.user.id}/project`, {
+      userId: userData?.user.id,
+      title,
+      tags,
+      link,
+      description,
+    })
+
+    // if (imgPortfolio) {
+    //   const fileUploadForm = new FormData()
+    //   fileUploadForm.append('avatar', imgPortfolio)
+
+    //   await api.post(`/project/${res.data.project.id}/photo`, {
+    //     avatar: fileUploadForm,
+    //   })
+    // }
   }
 
   return (
@@ -50,6 +81,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="title"
                 name="title"
                 label="Título"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
 
               <TextField
@@ -60,6 +93,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="tags"
                 name="tags"
                 label="Tags"
+                value={tags.join(',')}
+                onChange={(e) => setTags(e.target.value.split(','))}
               />
 
               <TextField
@@ -69,6 +104,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="link"
                 name="link"
                 label="Link"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
               />
 
               <TextField
@@ -79,6 +116,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="description"
                 name="description"
                 label="Descrição"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </InputsContainer>
 
@@ -118,6 +157,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
           <ButtonsContainer>
             <Button
               variant="contained"
+              onClick={handleCreateNewProject}
               style={{
                 backgroundColor: '#f32',
                 fontWeight: 'bold',
