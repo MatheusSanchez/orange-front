@@ -1,6 +1,23 @@
 import { Box } from '@mui/material'
 import styled from 'styled-components'
 
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  color: ${(props) => props.theme['color-neutral-130']};
+  background-color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+`
+export const DistanceButton = styled.div`
+  @media (max-width: 978px) {
+    margin-bottom: 2rem;
+  }
+`
+
 export const ModalBox = styled(Box)`
   position: absolute;
   top: 50%;
@@ -48,6 +65,8 @@ export const ModalBox = styled(Box)`
 
   @media (min-width: 978px) {
     width: 75rem;
+    height: 98%;
+    overflow-y: auto;
   }
 
   @media (max-width: 978px) {
@@ -55,6 +74,7 @@ export const ModalBox = styled(Box)`
     max-width: 400px;
     overflow-y: auto;
     max-height: 80vh;
+    padding: 0.5rem;
   }
 `
 export const CardProfile = styled.div`
@@ -63,10 +83,14 @@ export const CardProfile = styled.div`
 
   margin-bottom: 2rem;
 `
+export const ProfileContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 
 export const AvatarContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   margin-bottom: 0.5rem;
 `
 
@@ -111,4 +135,12 @@ export const Tag = styled.span`
 
   color: ${(props) => props.theme['color-principal-100']};
   background-color: ${(props) => props.theme['btn-gray']};
+
+  width: fit-content;
+  white-space: nowrap;
+`
+export const ImageBanner = styled.img`
+  width: 100%;
+  height: auto;
+  margin-bottom: 0.5rem;
 `
