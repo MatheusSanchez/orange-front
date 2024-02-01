@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'

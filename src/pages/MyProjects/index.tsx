@@ -2,6 +2,7 @@
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ThreeDots } from 'react-loader-spinner'
 
 import { CardMyProject } from '../../components/CardMyProject'
 import { CardProfile } from '../../components/CardProfile'
@@ -15,7 +16,9 @@ import { ProjectProps } from '../../interfaces/ProjectProps'
 import { api } from '../../lib/axios'
 import {
   CardProfileContainer,
+  EmptySearch,
   InputContainer,
+  LoaderContainer,
   MainContainer,
   MyProjectsContainer,
   ProjectsContainer,
@@ -26,6 +29,7 @@ export function MyProjects() {
   const { userData } = useAuth()
   const [openModal, setOpenModal] = useState(false)
   const [chipData, setChipData] = useState<readonly ChipData[]>([])
+  const [loadingInfo, setLoadingInfo] = useState(false)
 
   const handleOpenModal = () => {
     setOpenModal(true)
@@ -33,30 +37,39 @@ export function MyProjects() {
 
   const [userProjectsData, setUserProjectsData] = useState<ProjectProps[]>([])
 
-  const getProjectsByUserId = async () => {
+  const getUserProjects = async () => {
+    setLoadingInfo(true)
     try {
-      const res = await api.post('/projects/tags', {
-        tags: chipData.map((chip) => chip.label),
-      })
+      const tags = chipData.map((chip) => chip.label.toLowerCase())
+      const res = await api.get(`/projects/${userData?.user.id}`)
+      const { projects } = res.data
 
-      const userProjects = res.data.projects
-        .filter(
-          (projeto: ProjectProps) => projeto.user_id === userData?.user.id,
-        )
-        .sort(
-          (a: ProjectProps, b: ProjectProps) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-        )
+      const filteredProjects =
+        tags.length === 0
+          ? projects
+          : projects.filter((projeto: ProjectProps) =>
+              projeto.tags.some((tag) => tags.includes(tag.toLowerCase())),
+            )
 
-      setUserProjectsData(userProjects)
+      const projectsSorted = filteredProjects.sort(
+        (a: ProjectProps, b: ProjectProps) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )
+
+      setUserProjectsData(projectsSorted)
     } catch (error) {
-      console.error('Erro na requisição:', error)
+      console.error('Erro ao processar a requisição', error)
+      throw error
+    } finally {
+      setLoadingInfo(false)
     }
   }
 
+  console.log(userProjectsData)
+
   useEffect(() => {
     if (userData?.user.id) {
-      getProjectsByUserId()
+      getUserProjects()
     }
   }, [chipData])
 
@@ -74,21 +87,39 @@ export function MyProjects() {
         </InputContainer>
 
         <ProjectsContainer>
-          {userProjectsData.length === 0 ? (
-            <>
-              <UploadFileContent onClick={handleOpenModal} />
-              <EmptyFileContent />
-              <EmptyFileContent />
-            </>
-          ) : (
-            userProjectsData.map((project) => (
-              <CardMyProject
-                key={project.id}
-                userName={userData?.user.name}
-                date={format(new Date(project.created_at), 'dd/MM')}
-                tags={project.tags}
+          {!loadingInfo ? (
+            <LoaderContainer>
+              <ThreeDots
+                height="100"
+                width="100"
+                color="#ff8833"
+                radius="1"
+                ariaLabel="tail-spin-loading"
               />
-            ))
+            </LoaderContainer>
+          ) : (
+            <>
+              {userProjectsData.length === 0 && chipData.length === 0 && (
+                <>
+                  <UploadFileContent onClick={handleOpenModal} />
+                  <EmptyFileContent />
+                  <EmptyFileContent />
+                </>
+              )}
+
+              {userProjectsData.length > 0 ? (
+                userProjectsData.map((project) => (
+                  <CardMyProject
+                    key={project.id}
+                    userName={userData?.user.name}
+                    date={format(new Date(project.created_at), 'dd/MM')}
+                    tags={project.tags}
+                  />
+                ))
+              ) : (
+                <EmptySearch>Nenhum projeto encontrado</EmptySearch>
+              )}
+            </>
           )}
         </ProjectsContainer>
       </MainContainer>
