@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const HeaderContainer = styled.header`
   width: 100%;
   background: #113;
+  min-width: 370px;
 `
 
 export const HeaderContent = styled.div`

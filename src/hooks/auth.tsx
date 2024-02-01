@@ -17,6 +17,7 @@ interface UserProps {
   password?: string
   created_at?: string
   updated_at?: string
+  country?: string
 }
 
 interface AuthContextType {
@@ -35,7 +36,9 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
-export const AuthContext = createContext({} as AuthContextType)
+export const AuthContext = createContext(
+  {} as AuthContextType & { updateUserCountry: (country: string) => void },
+)
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [userData, setUserData] = useState<{ user: UserProps; token: string }>({
@@ -102,9 +105,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [])
 
+  const updateUserCountry = (country: string) => {
+    setUserData((prevData) => ({
+      ...prevData,
+      user: {
+        ...prevData.user,
+        country,
+      },
+    }))
+  }
+
   return (
     <AuthContext.Provider
-      value={{ handleSignIn, handleSignUp, handleLogout, userData }}
+      value={{
+        handleSignIn,
+        handleSignUp,
+        handleLogout,
+        userData,
+        updateUserCountry,
+      }}
     >
       {children}
     </AuthContext.Provider>

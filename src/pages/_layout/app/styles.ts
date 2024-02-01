@@ -12,6 +12,7 @@ export const OutletContainer = styled.div`
   flex: 1;
   margin: 0 auto;
   padding: 1rem 1.88rem;
+  min-width: 320px;
 
   @media (min-width: 978px) {
     max-width: 80rem;

@@ -19,7 +19,8 @@ export default function AccountMenu() {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
-  const handleClose = () => {
+  const handleEditProfileClose = () => {
+    navigate('/editar-perfil')
     setAnchorEl(null)
   }
 
@@ -51,8 +52,8 @@ export default function AccountMenu() {
         anchorEl={anchorEl}
         id="account-menu"
         open={open}
-        onClose={handleClose}
-        onClick={handleClose}
+        onClose={handleEditProfileClose}
+        onClick={handleEditProfileClose}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -70,7 +71,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'left', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleEditProfileClose}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
