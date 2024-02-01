@@ -10,8 +10,9 @@ import { SearchTags } from '../../components/SearchTags'
 import { UploadFileContent } from '../../components/UploadFileContent'
 import { EmptyFileContent } from '../../components/UploadFileContent/EmptyFileContent'
 import { useAuth } from '../../hooks/auth'
-import { useProjects } from '../../hooks/userProjects'
 import { ChipData } from '../../interfaces/ChipData'
+import { ProjectProps } from '../../interfaces/ProjectProps'
+import { api } from '../../lib/axios'
 import {
   CardProfileContainer,
   InputContainer,
@@ -22,6 +23,7 @@ import {
 } from './styles'
 
 export function MyProjects() {
+  const { userData } = useAuth()
   const [openModal, setOpenModal] = useState(false)
   const [chipData, setChipData] = useState<readonly ChipData[]>([])
 
@@ -29,14 +31,35 @@ export function MyProjects() {
     setOpenModal(true)
   }
 
-  const { userProjectsData, getUserProjects } = useProjects()
-  const { userData } = useAuth()
+  const [userProjectsData, setUserProjectsData] = useState<ProjectProps[]>([])
+
+  const getProjectsByUserId = async () => {
+    try {
+      const res = await api.post('/projects/tags', {
+        tags: chipData.map((chip) => chip.label),
+      })
+
+      const userProjects = res.data.projects
+        .filter(
+          (projeto: ProjectProps) => projeto.user_id === userData?.user.id,
+        )
+        .sort(
+          (a: ProjectProps, b: ProjectProps) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        )
+
+      setUserProjectsData(userProjects)
+    } catch (error) {
+      console.error('Erro na requisição:', error)
+    }
+  }
 
   useEffect(() => {
     if (userData?.user.id) {
-      getUserProjects(userData?.user.id)
+      getProjectsByUserId()
     }
-  }, [])
+  }, [chipData])
+
   return (
     <MyProjectsContainer>
       <Helmet title="Meus Projetos" />

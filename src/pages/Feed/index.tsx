@@ -24,7 +24,15 @@ export function Feed() {
       const res = await api.post('/projects/tags', {
         tags: chipData.map((chip) => chip.label),
       })
-      setProjectsData(res.data.projects)
+
+      const allProjects = res.data.projects
+
+      const allProjectsSorted = allProjects.sort(
+        (a: ProjectProps, b: ProjectProps) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )
+
+      setProjectsData(allProjectsSorted)
     } catch (error) {
       console.error('Erro na requisição:', error)
     }
