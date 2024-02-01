@@ -3,7 +3,6 @@ import { Button, Modal, TextField } from '@mui/material'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 
-import { OpenModalViewProject } from '../../OpenModalViewProject'
 import { useAuth } from '../../../hooks/auth'
 import { api } from '../../../lib/axios'
 import {
@@ -25,19 +24,6 @@ interface ModalCreateNewProjectProps {
 }
 
 export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
-  const [projectInfo, setProjectInfo] = useState({
-    title: '',
-    tags: '',
-    link: '',
-    description: '',
-  })
-
-  const [imageBanner, setImageBanner] = useState('')
-
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target
-    setProjectInfo((prev) => ({ ...prev, [name]: value }))
-  }
   // const [imgPortfolio, setImgPortfolio] = useState<File | null>(null)
   const [tags, setTags] = useState<string[]>([])
   const [title, setTitle] = useState('')
@@ -50,14 +36,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
     if (file) {
       const imagePreview = URL.createObjectURL(file)
       props.setPreview(imagePreview)
-      setImageBanner(imagePreview)
-    }
-  }
-
-  const [openModal, setOpenModal] = useState(false)
-
-  const handleOpenModal = () => {
-    setOpenModal(true)
       // setImgPortfolio(file)
     }
   }
@@ -103,8 +81,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="title"
                 name="title"
                 label="Título"
-                value={projectInfo.title}
-                onChange={handleChange}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
@@ -117,8 +93,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="tags"
                 name="tags"
                 label="Tags"
-                value={projectInfo.tags}
-                onChange={handleChange}
                 value={tags.join(',')}
                 onChange={(e) => setTags(e.target.value.split(','))}
               />
@@ -130,8 +104,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="link"
                 name="link"
                 label="Link"
-                value={projectInfo.link}
-                onChange={handleChange}
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
               />
@@ -144,8 +116,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 id="description"
                 name="description"
                 label="Descrição"
-                value={projectInfo.description}
-                onChange={handleChange}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -182,9 +152,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
             </UploadFileContent>
           </MainContainer>
 
-          <a style={{ cursor: 'pointer' }} onClick={handleOpenModal}>
-            Visualizar publicação
-          </a>
+          <span>Visualizar publicação</span>
 
           <ButtonsContainer>
             <Button
@@ -211,12 +179,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
             </Button>
           </ButtonsContainer>
         </FormContainer>
-        <OpenModalViewProject
-          openModal={openModal}
-          setOpenModal={setOpenModal}
-          projectInfo={projectInfo}
-          imageBanner={imageBanner}
-        />
       </ModalBox>
     </Modal>
   )
