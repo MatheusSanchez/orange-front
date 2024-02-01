@@ -1,14 +1,10 @@
-import 'react-toastify/dist/ReactToastify.css'
-
 import { TextField } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import { styled } from '@mui/material/styles'
 import { useState } from 'react'
-import { toast, ToastContainer } from 'react-toastify'
 
-interface ChipData {
-  label: string
-}
+import { ChipData } from '../../interfaces/ChipData'
+import { ErrorMessage } from './styles'
 
 const ChipList = ({
   chipData,
@@ -34,11 +30,16 @@ const ChipList = ({
   )
 }
 
-export function SearchTags() {
-  const [chipData, setChipData] = useState<readonly ChipData[]>([])
+interface SearchTagsProps {
+  chipData: readonly ChipData[]
+  setChipData: React.Dispatch<React.SetStateAction<readonly ChipData[]>>
+}
+
+export function SearchTags(props: SearchTagsProps) {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleDelete = (chipToDelete: ChipData) => () => {
-    setChipData((chips) =>
+    props.setChipData((chips) =>
       chips.filter((chip) => chip.label !== chipToDelete.label),
     )
   }
@@ -54,18 +55,19 @@ export function SearchTags() {
         return
       }
 
-      if (newTag.length > 16) {
-        toast.error('A tag não pode ter mais de 16 caracteres')
+      if (newTag.length > 12) {
+        setErrorMessage('A tag não pode ter mais de 12 caracteres')
       } else if (
-        chipData.some(
+        props.chipData.some(
           (chip) => chip.label.toLowerCase() === newTag.toLowerCase(),
         )
       ) {
-        toast.error('Tag já inserida')
-      } else if (chipData.length >= 2) {
-        toast.error('Limite máximo de 2 tags')
+        setErrorMessage('Tag já inserida')
+      } else if (props.chipData.length >= 2) {
+        setErrorMessage('Limite máximo de 2 tags')
       } else {
-        setChipData((prevChips) => [...prevChips, { label: newTag }])
+        props.setChipData((prevChips) => [...prevChips, { label: newTag }])
+        setErrorMessage(null)
         ;(event.target as HTMLInputElement).value = ''
       }
     }
@@ -84,25 +86,14 @@ export function SearchTags() {
         onKeyDown={handleKeyPress}
         InputProps={{
           endAdornment: (
-            <ChipList chipData={chipData} handleDelete={handleDelete} />
+            <ChipList chipData={props.chipData} handleDelete={handleDelete} />
           ),
         }}
         InputLabelProps={{
           shrink: true,
         }}
       />
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </>
   )
 }

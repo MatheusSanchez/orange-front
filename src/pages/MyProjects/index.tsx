@@ -11,6 +11,7 @@ import { UploadFileContent } from '../../components/UploadFileContent'
 import { EmptyFileContent } from '../../components/UploadFileContent/EmptyFileContent'
 import { useAuth } from '../../hooks/auth'
 import { useProjects } from '../../hooks/userProjects'
+import { ChipData } from '../../interfaces/ChipData'
 import {
   CardProfileContainer,
   InputContainer,
@@ -22,12 +23,13 @@ import {
 
 export function MyProjects() {
   const [openModal, setOpenModal] = useState(false)
+  const [chipData, setChipData] = useState<readonly ChipData[]>([])
 
   const handleOpenModal = () => {
     setOpenModal(true)
   }
 
-  const { getUserProjects, projectsData } = useProjects()
+  const { userProjectsData, getUserProjects } = useProjects()
   const { userData } = useAuth()
 
   useEffect(() => {
@@ -35,7 +37,6 @@ export function MyProjects() {
       getUserProjects(userData?.user.id)
     }
   }, [])
-
   return (
     <MyProjectsContainer>
       <Helmet title="Meus Projetos" />
@@ -46,18 +47,18 @@ export function MyProjects() {
       <MainContainer>
         <InputContainer>
           <StyledTypography variant="h5">Meus Projetos</StyledTypography>
-          <SearchTags />
+          <SearchTags chipData={chipData} setChipData={setChipData} />
         </InputContainer>
 
         <ProjectsContainer>
-          {projectsData.length === 0 ? (
+          {userProjectsData.length === 0 ? (
             <>
               <UploadFileContent onClick={handleOpenModal} />
               <EmptyFileContent />
               <EmptyFileContent />
             </>
           ) : (
-            projectsData.map((project) => (
+            userProjectsData.map((project) => (
               <CardMyProject
                 key={project.id}
                 userName={userData?.user.name}

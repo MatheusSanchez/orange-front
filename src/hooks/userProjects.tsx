@@ -2,39 +2,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, ReactNode, useContext, useState } from 'react'
 
+import { ProjectProps } from '../interfaces/ProjectProps'
 import { api } from '../lib/axios'
-
-interface ProjectProps {
-  id: string
-  title: string
-  tags: string[]
-  link: string
-  description: string
-  created_at: string
-  updated_at: string
-  user_id: string
-}
 
 interface ProjectsProviderProps {
   children: ReactNode
 }
 
 interface ProjectsContextType {
-  projectsData: ProjectProps[]
-  getUserProjects: (user_id: string | undefined) => Promise<any>
+  userProjectsData: ProjectProps[]
+  getUserProjects: (user_id: string) => Promise<any>
 }
 
 export const ProjectsContext = createContext({} as ProjectsContextType)
 
 export function ProjectsProvider({ children }: ProjectsProviderProps) {
-  const [projectsData, setProjectsData] = useState<ProjectProps[]>([])
+  const [userProjectsData, setUserProjectsData] = useState<ProjectProps[]>([])
 
-  async function getUserProjects(user_id: string | undefined) {
+  async function getUserProjects(user_id: string) {
     try {
       const res = await api.get(`/projects/${user_id}`)
       const { projects } = res.data
-
-      setProjectsData(projects)
+      setUserProjectsData(projects)
     } catch (error) {
       console.error('Erro ao processar a requisição', error)
       throw error
@@ -42,7 +31,7 @@ export function ProjectsProvider({ children }: ProjectsProviderProps) {
   }
 
   return (
-    <ProjectsContext.Provider value={{ getUserProjects, projectsData }}>
+    <ProjectsContext.Provider value={{ getUserProjects, userProjectsData }}>
       {children}
     </ProjectsContext.Provider>
   )
