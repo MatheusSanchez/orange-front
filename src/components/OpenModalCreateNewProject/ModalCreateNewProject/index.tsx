@@ -33,7 +33,7 @@ interface ModalCreateNewProjectProps {
 const newProjectFormSchema = z.object({
   title: z
     .string()
-    .min(5, 'Mínimo de 3 caracteres')
+    .min(3, 'Mínimo de 3 caracteres')
     .max(50, 'Máximo 50 caracteres'),
   tags: z
     .array(z.string())
@@ -53,6 +53,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
   const { userData } = useAuth()
 
   const [loadingAuth, setLoadingAuth] = useState(false)
+  const [imgFile, setImgFile] = useState<File | null>(null)
 
   const { openErrorModal, openCreateModal } = useModalContext()
   const errorModal = () => openErrorModal()
@@ -72,6 +73,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
     if (file) {
       const imagePreview = URL.createObjectURL(file)
       props.setPreview(imagePreview)
+      setImgFile(file)
     }
   }
 
@@ -79,17 +81,25 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
     setLoadingAuth(true)
     try {
       await newProjectFormSchema.parseAsync(data)
-      await api
-        .post(`/user/${userData?.user.id}/project`, {
-          userId: userData?.user.id,
-          title: data.title,
-          tags: data.tags,
-          link: data.link,
-          description: data.description,
-        })
-        .then(() => {
-          createModal()
-        })
+
+      const res = await api.post(`/user/${userData?.user.id}/project`, {
+        userId: userData?.user.id,
+        title: data.title,
+        tags: data.tags,
+        link: data.link,
+        description: data.description,
+      })
+
+      if (imgFile) {
+        const fileUploadForm = new FormData()
+        fileUploadForm.append('avatar', imgFile)
+        await api.post(
+          `/project/${res.data.project.project.id}/photo`,
+          fileUploadForm,
+        )
+      }
+
+      createModal()
     } catch (error) {
       errorModal()
     } finally {

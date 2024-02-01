@@ -65,7 +65,7 @@ export function MyProjects() {
     }
   }
 
-  console.log(userProjectsData)
+  console.log(chipData)
 
   useEffect(() => {
     if (userData?.user.id) {
@@ -87,7 +87,7 @@ export function MyProjects() {
         </InputContainer>
 
         <ProjectsContainer>
-          {!loadingInfo ? (
+          {loadingInfo ? (
             <LoaderContainer>
               <ThreeDots
                 height="100"
@@ -107,16 +107,18 @@ export function MyProjects() {
                 </>
               )}
 
-              {userProjectsData.length > 0 ? (
-                userProjectsData.map((project) => (
-                  <CardMyProject
-                    key={project.id}
-                    userName={userData?.user.name}
-                    date={format(new Date(project.created_at), 'dd/MM')}
-                    tags={project.tags}
-                  />
-                ))
-              ) : (
+              {userProjectsData.length > 0 && chipData.length === 0
+                ? userProjectsData.map((project) => (
+                    <CardMyProject
+                      key={project.id}
+                      userName={userData?.user.name}
+                      date={format(new Date(project.created_at), 'dd/MM')}
+                      tags={project.tags}
+                    />
+                  ))
+                : null}
+
+              {userProjectsData.length === 0 && chipData.length >= 1 && (
                 <EmptySearch>Nenhum projeto encontrado</EmptySearch>
               )}
             </>
