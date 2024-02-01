@@ -4,6 +4,7 @@ import styled from 'styled-components'
 export const CardMyProjectContainer = styled.div`
   max-width: 24.3125rem;
   height: 16.125rem;
+  margin-bottom: 3.5rem;
 
   @media (min-width: 978px) {
     width: 24.3125rem;
