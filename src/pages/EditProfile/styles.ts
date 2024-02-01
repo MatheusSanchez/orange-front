@@ -6,7 +6,6 @@ export const EditProfileContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 1rem 0 5rem;
-  min-width: 320px;
 
   svg:first-child {
     position: absolute;
@@ -101,14 +100,14 @@ export const TextContainer = styled.div`
   > h1 {
     margin-bottom: 0.3rem;
     color: ${(props) => props.theme['color-neutral-130']};
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   > p {
     width: 150px;
     margin-bottom: 2rem;
     color: ${(props) => props.theme['color-neutral-90']};
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 `
 

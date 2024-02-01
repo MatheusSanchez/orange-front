@@ -2,6 +2,7 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import { Avatar, InputLabel, MenuItem, TextField } from '@mui/material'
 import * as countriesList from 'countries-list'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import avatarPlaceholder from '../../assets/avatarPlaceholder.png'
@@ -17,7 +18,22 @@ import {
 } from './styles'
 
 export function EditProfile() {
-  const { userData } = useAuth()
+  const { userData, updateUserCountry } = useAuth()
+  const [selectedCountry, setSelectedCountry] = useState(
+    userData?.user?.country || '',
+  )
+
+  const handleCountryChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
+    setSelectedCountry(event.target.value as string)
+  }
+
+  const handleUpdateProfile = () => {
+    if (selectedCountry) {
+      updateUserCountry(selectedCountry)
+    }
+  }
 
   const allCountries = Object.values(countriesList.countries)
 
@@ -77,7 +93,8 @@ export function EditProfile() {
             fullWidth
             id="country"
             name="country"
-            defaultValue=""
+            defaultValue={userData?.user.country || ''}
+            onChange={handleCountryChange}
             InputLabelProps={{
               shrink: false,
             }}
@@ -89,7 +106,12 @@ export function EditProfile() {
             ))}
           </TextField>
         </InputsContainer>
-        <StyledButton fullWidth type="button" variant="contained">
+        <StyledButton
+          fullWidth
+          type="button"
+          variant="contained"
+          onClick={handleUpdateProfile}
+        >
           Atualizar
         </StyledButton>
         <span>
