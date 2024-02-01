@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import styled from 'styled-components'
 
 export const ButtonAndModalContainer = styled.div`
@@ -151,4 +151,42 @@ export const ButtonsContainer = styled.div`
 
   @media (min-width: 978px) {
   }
+`
+
+const BUTTON_BG_COLOR = {
+  save: 'color-secondary-100',
+  cancel: 'btn-gray',
+} as const
+
+const BUTTON_TXT_COLOR = {
+  save: 'color-neutral-60',
+  cancel: 'btn-text-gray',
+}
+
+interface ColorProps {
+  buttoncolor: keyof typeof BUTTON_BG_COLOR
+  textcollor: keyof typeof BUTTON_TXT_COLOR
+}
+
+export const StyledButton = styled(Button)<ColorProps>`
+  background: ${(props) =>
+    props.theme[BUTTON_BG_COLOR[props.buttoncolor]]} !important;
+
+  font-weight: bold !important;
+  color: ${(props) =>
+    props.theme[BUTTON_TXT_COLOR[props.textcollor]]} !important;
+
+  &:disabled {
+    background: ${(props) => props.theme['btn-gray']} !important;
+    color: ${(props) => props.theme['btn-text-gray']} !important;
+  }
+`
+
+export const ErrorMessage = styled.p`
+  margin-bottom: 1rem;
+  color: ${(props) => props.theme['color-error-100']} !important;
+  font-weight: bold !important;
+  text-align: center;
+  display: flex;
+  align-self: center;
 `
