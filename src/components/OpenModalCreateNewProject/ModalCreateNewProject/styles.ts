@@ -24,7 +24,8 @@ export const ModalBox = styled(Box)`
     color: ${(props) => props.theme['color-neutral-110']};
   }
 
-  a {
+  p,
+  span {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1rem;
