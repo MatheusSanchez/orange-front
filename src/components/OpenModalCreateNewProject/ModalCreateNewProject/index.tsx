@@ -1,17 +1,24 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Collections } from '@mui/icons-material'
-import { Button, Modal, TextField } from '@mui/material'
+import { Modal, TextField } from '@mui/material'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useForm } from 'react-hook-form'
+import { TailSpin } from 'react-loader-spinner'
+import { z } from 'zod'
 
+import { useModalContext } from '../../../contexts/ModalContext'
 import { useAuth } from '../../../hooks/auth'
 import { api } from '../../../lib/axios'
 import {
   ButtonsContainer,
+  ErrorMessage,
   FormContainer,
   InputsContainer,
   LabelContent,
   MainContainer,
   ModalBox,
+  StyledButton,
   UploadFileContent,
   UploadFileInput,
 } from './styles'
@@ -23,42 +30,73 @@ interface ModalCreateNewProjectProps {
   handleClose: () => void
 }
 
+const newProjectFormSchema = z.object({
+  title: z
+    .string()
+    .min(5, 'Mínimo de 3 caracteres')
+    .max(50, 'Máximo 50 caracteres'),
+  tags: z
+    .array(z.string())
+    .refine((tags) => tags.length <= 3, {
+      message: 'Você só pode inserir até 3 tags',
+    })
+    .refine((tags) => tags.every((tag) => tag.length <= 12), {
+      message: 'Cada tag deve ter no máximo 12 caracteres',
+    }),
+  link: z.string(),
+  description: z.string(),
+})
+
+type NewProjectFormSchema = z.infer<typeof newProjectFormSchema>
+
 export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
-  // const [imgPortfolio, setImgPortfolio] = useState<File | null>(null)
-  const [tags, setTags] = useState<string[]>([])
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [link, setLink] = useState('')
+  const { userData } = useAuth()
 
-  function handleChangePreview(event: React.ChangeEvent<HTMLInputElement>) {
+  const [loadingAuth, setLoadingAuth] = useState(false)
+
+  const { openErrorModal, openCreateModal } = useModalContext()
+  const errorModal = () => openErrorModal()
+  const createModal = () => openCreateModal()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<NewProjectFormSchema>({
+    resolver: zodResolver(newProjectFormSchema),
+  })
+
+  function handleChangeImgPreview(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-
     if (file) {
       const imagePreview = URL.createObjectURL(file)
       props.setPreview(imagePreview)
-      // setImgPortfolio(file)
     }
   }
 
-  const { userData } = useAuth()
-
-  async function handleCreateNewProject() {
-    await api.post(`/user/${userData?.user.id}/project`, {
-      userId: userData?.user.id,
-      title,
-      tags,
-      link,
-      description,
-    })
-
-    // if (imgPortfolio) {
-    //   const fileUploadForm = new FormData()
-    //   fileUploadForm.append('avatar', imgPortfolio)
-
-    //   await api.post(`/project/${res.data.project.id}/photo`, {
-    //     avatar: fileUploadForm,
-    //   })
-    // }
+  async function handleCreateNewProject(data: NewProjectFormSchema) {
+    setLoadingAuth(true)
+    try {
+      await newProjectFormSchema.parseAsync(data)
+      await api
+        .post(`/user/${userData?.user.id}/project`, {
+          userId: userData?.user.id,
+          title: data.title,
+          tags: data.tags,
+          link: data.link,
+          description: data.description,
+        })
+        .then(() => {
+          createModal()
+        })
+    } catch (error) {
+      errorModal()
+    } finally {
+      reset()
+      setLoadingAuth(false)
+      props.handleClose()
+    }
   }
 
   return (
@@ -70,7 +108,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
       <ModalBox>
         <Helmet title="Adicionar projeto" />
         <h2>Adicionar projeto</h2>
-        <FormContainer>
+        <FormContainer onSubmit={handleSubmit(handleCreateNewProject)}>
           <MainContainer>
             <InputsContainer>
               <TextField
@@ -79,11 +117,14 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 fullWidth
                 type="text"
                 id="title"
-                name="title"
                 label="Título"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Exemplo: FCamara é a melhor"
+                {...register('title')}
               />
+
+              {errors.title && (
+                <ErrorMessage>{errors.title.message}</ErrorMessage>
+              )}
 
               <TextField
                 variant="outlined"
@@ -91,33 +132,44 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 fullWidth
                 type="text"
                 id="tags"
-                name="tags"
                 label="Tags"
-                value={tags.join(',')}
-                onChange={(e) => setTags(e.target.value.split(','))}
+                placeholder="Exemplo: node, react, figma"
+                {...register('tags', {
+                  setValueAs: (value) =>
+                    typeof value === 'string'
+                      ? value
+                          .split(',')
+                          .map((tag) => tag.trim())
+                          .filter((tag) => tag !== '') // Remove tags vazias
+                      : value,
+                })}
               />
+
+              {errors.tags && (
+                <ErrorMessage>{errors.tags.message}</ErrorMessage>
+              )}
 
               <TextField
                 variant="outlined"
+                required
                 fullWidth
                 type="text"
                 id="link"
-                name="link"
                 label="Link"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
+                placeholder="Exemplo: https://www.linkedin.com/in/pedrodecf"
+                {...register('link')}
               />
 
               <TextField
                 variant="outlined"
+                required
                 fullWidth
                 multiline
                 rows={4}
                 id="description"
-                name="description"
                 label="Descrição"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Exemplo: Os integrantes do squad 40 são sensacionais"
+                {...register('description')}
               />
             </InputsContainer>
 
@@ -129,9 +181,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                   type="file"
                   name="chooseFile"
                   id="chooseFile"
-                  accept="image/*, .png, .jpg"
-                  required
-                  onChange={handleChangePreview}
+                  onChange={handleChangeImgPreview}
                 />
                 <label htmlFor="chooseFile">
                   <LabelContent
@@ -142,7 +192,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                         height: 46,
                         width: 46,
                         fill: '#323232',
-                        cursor: 'pointer',
                       }}
                     />
                     <p>Compartilhe seu talento com milhares de pessoas</p>
@@ -151,32 +200,32 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
               </UploadFileInput>
             </UploadFileContent>
           </MainContainer>
-
           <span>Visualizar publicação</span>
 
           <ButtonsContainer>
-            <Button
+            <StyledButton
+              textcollor="save"
+              buttoncolor="save"
               variant="contained"
-              onClick={handleCreateNewProject}
-              style={{
-                backgroundColor: '#f32',
-                fontWeight: 'bold',
-              }}
+              type="submit"
+              disabled={loadingAuth}
+              startIcon={
+                loadingAuth ? (
+                  <TailSpin width={12} height={12} color="#00000061" />
+                ) : null
+              }
             >
-              Salvar
-            </Button>
+              {loadingAuth ? 'Salvando' : 'Salvar'}
+            </StyledButton>
 
-            <Button
+            <StyledButton
+              textcollor="cancel"
+              buttoncolor="cancel"
               variant="contained"
               onClick={props.handleClose}
-              style={{
-                backgroundColor: '#0000001f',
-                color: '#00000061',
-                fontWeight: 'bold',
-              }}
             >
               Cancelar
-            </Button>
+            </StyledButton>
           </ButtonsContainer>
         </FormContainer>
       </ModalBox>
