@@ -2,6 +2,7 @@ import Avatar from '@mui/material/Avatar'
 import styled from 'styled-components'
 
 export const CardMyProjectContainer = styled.div`
+  width: 80vw;
   max-width: 24.3125rem;
   height: 16.125rem;
   margin-bottom: 3.5rem;
@@ -12,17 +13,19 @@ export const CardMyProjectContainer = styled.div`
 `
 
 export const CardMyProjectContent = styled.div`
-  max-width: 24.3125rem;
+  width: 100%;
   height: 16.125rem;
   background: ${(props) => props.theme['color-neutral-70']};
   border-radius: 4px;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
 
-  img {
+  .image-container {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    background-size: cover;
+    background-position: center;
     border-radius: 4px;
   }
 

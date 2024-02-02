@@ -46,6 +46,11 @@ const newProjectFormSchema = z.object({
     }),
   link: z.string(),
   description: z.string(),
+  imgFile: z
+    .unknown()
+    .refine((imgFile) => imgFile !== null && imgFile !== undefined, {
+      message: 'Imagem é obrigatória',
+    }),
 })
 
 type NewProjectFormSchema = z.infer<typeof newProjectFormSchema>
@@ -83,9 +88,10 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
   function handleChangeImgPreview(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (file) {
+      setImgFile(file)
+
       const imagePreview = URL.createObjectURL(file)
       props.setPreview(imagePreview)
-      setImgFile(file)
       setImageBanner(imagePreview)
     }
   }
@@ -106,12 +112,12 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
       if (imgFile) {
         const fileUploadForm = new FormData()
         fileUploadForm.append('avatar', imgFile)
-        await api.post(
-          `/project/${res.data.project.project.id}/photo`,
-          fileUploadForm,
-        )
+        await api
+          .post(`/project/${res.data.project.id}/photo`, fileUploadForm)
+          .then(() => {
+            openCreateModal()
+          })
       }
-      createModal()
     } catch (error) {
       openErrorModal()
     } finally {
@@ -123,7 +129,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
 
   function handleOpenModal() {
     setOpenModal(true)
-    // setImgPortfolio(file)
   }
 
   return (
@@ -233,6 +238,9 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                   </LabelContent>
                 </label>
               </UploadFileInput>
+              {errors.imgFile && (
+                <ErrorMessage>{errors.imgFile.message}</ErrorMessage>
+              )}
             </UploadFileContent>
           </MainContainer>
           <a style={{ cursor: 'pointer' }} onClick={handleOpenModal}>

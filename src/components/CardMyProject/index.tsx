@@ -1,6 +1,6 @@
 import Chip from '@mui/material/Chip'
 
-import projectPlaceholder from '../../assets/projectPlaceholder.jpg'
+// import projectPlaceholder from '../../assets/projectPlaceholder.jpg'
 import { OptionsButton } from './OptionsButton'
 import {
   AvatarContainer,
@@ -18,13 +18,18 @@ interface CardMyProjectProps {
   userName?: string
   date?: string
   tags?: string[]
+  photo_url?: string
 }
 
 export function CardMyProject(props: CardMyProjectProps) {
   return (
     <CardMyProjectContainer>
       <CardMyProjectContent>
-        <img src={projectPlaceholder} alt="" />
+        <div
+          className="image-container"
+          style={{ backgroundImage: `url(${props.photo_url})` }}
+        />
+
         <OptionContainer>
           <OptionsButton />
         </OptionContainer>
