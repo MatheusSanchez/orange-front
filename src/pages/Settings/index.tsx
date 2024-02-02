@@ -69,6 +69,7 @@ export function Settings() {
         <StyledButton fullWidth type="button" variant="contained">
           Atualizar
         </StyledButton>
+
         <Link to="/editar-perfil" className="Settings">
           Clique aqui para editar seu perfil
         </Link>

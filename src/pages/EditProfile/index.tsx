@@ -20,7 +20,7 @@ import {
 
 export function EditProfile() {
   const { userData, updateUserCountry } = useAuth()
-  const { openEditModal, openErrorModal } = useModalContext()
+  const { openUpdateProfileModal, openAlertErrorModal } = useModalContext()
   const [selectedCountry, setSelectedCountry] = useState(
     userData?.user?.country || '',
   )
@@ -35,10 +35,10 @@ export function EditProfile() {
 
   const handleUpdateProfile = () => {
     if (selectedCountry !== userData?.user?.country) {
-      openEditModal()
+      openUpdateProfileModal()
       updateUserCountry(selectedCountry)
     } else {
-      openErrorModal()
+      openAlertErrorModal()
     }
   }
 
