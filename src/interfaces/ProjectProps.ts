@@ -7,4 +7,5 @@ export interface ProjectProps {
   created_at: string
   updated_at: string
   user_id: string
+  photo_url: string
 }

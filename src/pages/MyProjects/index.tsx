@@ -114,6 +114,7 @@ export function MyProjects() {
                       userName={userData?.user.name}
                       date={format(new Date(project.created_at), 'dd/MM')}
                       tags={project.tags}
+                      photo_url={project.photo_url}
                     />
                   ))
                 : null}
