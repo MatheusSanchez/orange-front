@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createContext,
   ReactNode,
@@ -27,8 +26,8 @@ interface AuthContextType {
     surname: string,
     email: string,
     password: string,
-  ) => Promise<any>
-  handleSignIn: (email: string, password: string) => Promise<any>
+  ) => Promise<unknown>
+  handleSignIn: (email: string, password: string) => Promise<unknown>
   handleLogout: () => void
 }
 

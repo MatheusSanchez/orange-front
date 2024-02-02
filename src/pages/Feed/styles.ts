@@ -62,3 +62,12 @@ export const ProjectsContainer = styled.div`
     justify-content: center;
   }
 `
+
+export const EmptySearch = styled.p`
+  color: ${(props) => props.theme['color-principal-100']} !important;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-self: center;
+`
