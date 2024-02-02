@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import styled from 'styled-components'
 
-export const EditProfileContainer = styled.div`
+export const SettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,34 +20,12 @@ export const EditProfileContainer = styled.div`
     justify-content: flex-start;
   }
 `
-
-export const AvatarContainer = styled.div`
-  position: relative;
-  width: 122px;
-  height: 122px;
-  margin-bottom: 1.5rem;
-
-  > svg {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    color: ${(props) => props.theme['color-neutral-60']};
-    background-color: ${(props) => props.theme['color-secondary-100']};
-    padding: 0.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-`
-
 export const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   min-width: 300px;
+  margin-top: 3rem;
 
-  a.AccountSettings {
+  a.Settings {
+    margin-top: 1rem;
     display: block;
     text-align: center;
     font-size: 0.7rem;
@@ -61,29 +39,11 @@ export const MainContainer = styled.div`
   }
 `
 
-export const NameContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-
-  & > * {
-    margin-top: 0.5rem;
-  }
-
-  @media (min-width: 978px) {
-    flex-direction: row;
-    gap: 2rem;
-
-    div {
-      width: 100%;
-    }
-  }
-`
-
 export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  margin-bottom: 1.5rem;
 
   & > * {
     margin-top: 0.5rem;
@@ -97,16 +57,10 @@ export const TextContainer = styled.div`
   text-align: center;
 
   > h1 {
-    margin-bottom: 0.3rem;
+    width: 150px;
+    margin-bottom: 3rem;
     color: ${(props) => props.theme['color-neutral-130']};
     font-size: 1rem;
-  }
-
-  > p {
-    width: 150px;
-    margin-bottom: 2rem;
-    color: ${(props) => props.theme['color-neutral-90']};
-    font-size: 0.75rem;
   }
 `
 

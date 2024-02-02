@@ -70,6 +70,67 @@ export function DeleteModalSucess() {
   )
 }
 
+export function UpdateProfileSucess() {
+  const { updateProfileModalState, closeUpdateProfileModal } = useModalContext()
+  return (
+    <Modal open={updateProfileModalState} onClose={closeUpdateProfileModal}>
+      <BoxContainer>
+        <h2>Perfil atualizado com sucesso!</h2>
+        <img src={sucessSvg} alt="" />
+        <StyledButton
+          buttoncolor="save"
+          textcollor="save"
+          variant="contained"
+          onClick={closeUpdateProfileModal}
+        >
+          Confirmar
+        </StyledButton>
+      </BoxContainer>
+    </Modal>
+  )
+}
+
+export function ChangePasswordSucess() {
+  const { changePasswordModalState, closeChangePasswordModal } =
+    useModalContext()
+  return (
+    <Modal open={changePasswordModalState} onClose={closeChangePasswordModal}>
+      <BoxContainer>
+        <h2>Senha atualizada com sucesso!</h2>
+        <img src={sucessSvg} alt="" />
+        <StyledButton
+          buttoncolor="save"
+          textcollor="save"
+          variant="contained"
+          onClick={closeChangePasswordModal}
+        >
+          Confirmar
+        </StyledButton>
+      </BoxContainer>
+    </Modal>
+  )
+}
+
+export function AlertError() {
+  const { alertErrorModalState, closeAlertErrorModal } = useModalContext()
+  return (
+    <Modal open={alertErrorModalState} onClose={closeAlertErrorModal}>
+      <BoxContainer>
+        <h2>Ops! Algo deu errado. Por favor, tente novamente!</h2>
+        <img src={errorSvg} alt="" />
+        <StyledButton
+          buttoncolor="save"
+          textcollor="save"
+          variant="contained"
+          onClick={closeAlertErrorModal}
+        >
+          Confirmar
+        </StyledButton>
+      </BoxContainer>
+    </Modal>
+  )
+}
+
 export function ErrorModal() {
   const { errorModalState, closeErrorModal } = useModalContext()
   return (

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import avatarPlaceholder from '../../assets/avatarPlaceholder.png'
+import { useModalContext } from '../../contexts/ModalContext'
 import { useAuth } from '../../hooks/auth'
 import {
   AvatarContainer,
@@ -19,9 +20,12 @@ import {
 
 export function EditProfile() {
   const { userData, updateUserCountry } = useAuth()
+  const { openUpdateProfileModal, openAlertErrorModal } = useModalContext()
   const [selectedCountry, setSelectedCountry] = useState(
     userData?.user?.country || '',
   )
+
+  const allCountries = Object.values(countriesList.countries)
 
   const handleCountryChange = (
     event: React.ChangeEvent<{ value: unknown }>,
@@ -30,16 +34,17 @@ export function EditProfile() {
   }
 
   const handleUpdateProfile = () => {
-    if (selectedCountry) {
+    if (selectedCountry !== userData?.user?.country) {
+      openUpdateProfileModal()
       updateUserCountry(selectedCountry)
+    } else {
+      openAlertErrorModal()
     }
   }
 
-  const allCountries = Object.values(countriesList.countries)
-
   return (
     <EditProfileContainer>
-      <Link to="/previous-page">
+      <Link to="/meus-projetos">
         <NavigateBeforeIcon style={{ fontSize: 40 }} />
       </Link>
       <TextContainer>
@@ -65,7 +70,7 @@ export function EditProfile() {
                 type="text"
                 id="name"
                 name="name"
-                value={userData?.user.name}
+                placeholder={userData?.user.name}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -79,7 +84,7 @@ export function EditProfile() {
                 type="text"
                 id="surname"
                 name="surname"
-                value={userData?.user.surname}
+                placeholder={userData?.user.surname}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -114,11 +119,9 @@ export function EditProfile() {
         >
           Atualizar
         </StyledButton>
-        <span>
-          <Link to="/" className="AccountSettings">
-            Clique aqui para editar as configurações da conta
-          </Link>
-        </span>
+        <Link to="/configuracoes" className="AccountSettings">
+          Clique aqui para editar as configurações da conta
+        </Link>
       </MainContainer>
     </EditProfileContainer>
   )
