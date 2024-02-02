@@ -10,6 +10,7 @@ import { z } from 'zod'
 import { useModalContext } from '../../../contexts/ModalContext'
 import { useAuth } from '../../../hooks/auth'
 import { api } from '../../../lib/axios'
+import { OpenModalViewProject } from '../../OpenModalViewProject'
 import {
   ButtonsContainer,
   ErrorMessage,
@@ -37,11 +38,11 @@ const newProjectFormSchema = z.object({
     .max(50, 'Máximo 50 caracteres'),
   tags: z
     .array(z.string())
-    .refine((tags) => tags.length <= 3, {
-      message: 'Você só pode inserir até 3 tags',
+    .refine((tags) => tags.length <= 2, {
+      message: 'Limite máximo de 2 tags',
     })
     .refine((tags) => tags.every((tag) => tag.length <= 12), {
-      message: 'Cada tag deve ter no máximo 12 caracteres',
+      message: 'A tag não pode ter mais de 12 caracteres',
     }),
   link: z.string(),
   description: z.string(),
@@ -54,10 +55,21 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
 
   const [loadingAuth, setLoadingAuth] = useState(false)
   const [imgFile, setImgFile] = useState<File | null>(null)
+  const [openModal, setOpenModal] = useState(false)
+  const [imageBanner, setImageBanner] = useState('')
+  const [projectInfo, setProjectInfo] = useState({
+    title: '',
+    tags: '',
+    link: '',
+    description: '',
+  })
 
   const { openErrorModal, openCreateModal } = useModalContext()
-  const errorModal = () => openErrorModal()
-  const createModal = () => openCreateModal()
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target
+    setProjectInfo((prev) => ({ ...prev, [name]: value }))
+  }
 
   const {
     register,
@@ -74,6 +86,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
       const imagePreview = URL.createObjectURL(file)
       props.setPreview(imagePreview)
       setImgFile(file)
+      setImageBanner(imagePreview)
     }
   }
 
@@ -98,15 +111,19 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
           fileUploadForm,
         )
       }
-
       createModal()
     } catch (error) {
-      errorModal()
+      openErrorModal()
     } finally {
       reset()
       setLoadingAuth(false)
       props.handleClose()
     }
+  }
+
+  function handleOpenModal() {
+    setOpenModal(true)
+    // setImgPortfolio(file)
   }
 
   return (
@@ -130,6 +147,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 label="Título"
                 placeholder="Exemplo: FCamara é a melhor"
                 {...register('title')}
+                value={projectInfo.title}
+                onChange={handleChange}
               />
 
               {errors.title && (
@@ -153,6 +172,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                           .filter((tag) => tag !== '') // Remove tags vazias
                       : value,
                 })}
+                value={projectInfo.tags}
+                onChange={handleChange}
               />
 
               {errors.tags && (
@@ -168,6 +189,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 label="Link"
                 placeholder="Exemplo: https://www.linkedin.com/in/pedrodecf"
                 {...register('link')}
+                value={projectInfo.link}
+                onChange={handleChange}
               />
 
               <TextField
@@ -180,6 +203,8 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                 label="Descrição"
                 placeholder="Exemplo: Os integrantes do squad 40 são sensacionais"
                 {...register('description')}
+                value={projectInfo.description}
+                onChange={handleChange}
               />
             </InputsContainer>
 
@@ -210,7 +235,9 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
               </UploadFileInput>
             </UploadFileContent>
           </MainContainer>
-          <span>Visualizar publicação</span>
+          <a style={{ cursor: 'pointer' }} onClick={handleOpenModal}>
+            Visualizar publicação
+          </a>
 
           <ButtonsContainer>
             <StyledButton
@@ -238,6 +265,12 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
             </StyledButton>
           </ButtonsContainer>
         </FormContainer>
+        <OpenModalViewProject
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          projectInfo={projectInfo}
+          imageBanner={imageBanner}
+        />
       </ModalBox>
     </Modal>
   )

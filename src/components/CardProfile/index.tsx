@@ -1,4 +1,5 @@
 import { Avatar } from '@mui/material'
+import { useEffect, useState } from 'react'
 
 import avatarPlaceholder from '../../assets/avatarPlaceholder.png'
 import { useAuth } from '../../hooks/auth'
@@ -12,6 +13,11 @@ import {
 
 export function CardProfile() {
   const { userData } = useAuth()
+  const [country, setCountry] = useState(userData?.user.country || '')
+
+  useEffect(() => {
+    setCountry(userData?.user.country || '')
+  }, [userData?.user.country])
 
   return (
     <CardProfileContainer>
@@ -27,7 +33,7 @@ export function CardProfile() {
         <h2>
           {userData?.user.name} {userData?.user.surname}
         </h2>
-        <span>Brasil</span>
+        <span>{country || 'País não especificado'}</span>
       </UserDataContainer>
 
       <ButtonContainer>
