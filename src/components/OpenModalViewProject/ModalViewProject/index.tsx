@@ -34,6 +34,7 @@ export function ModalViewProject(props: ModalViewProjectProps) {
   const { title, description, link, tags } = props.projectInfo
 
   const formattedDate = format(new Date(), 'dd/MM')
+  const isSmallScreen = window.innerWidth <= 978
 
   return (
     <Modal
@@ -46,33 +47,62 @@ export function ModalViewProject(props: ModalViewProjectProps) {
           <CloseButton onClick={props.handleClose}>X</CloseButton>
         </DistanceButton>
         <Helmet title="Visualizar Projeto" />
+        {isSmallScreen ? (
+          <>
+            <CardProfile>
+              <h1>{title}</h1>
+            </CardProfile>
 
-        <CardProfile>
-          <h1>{title}</h1>
-        </CardProfile>
-
-        <ImageBanner
-          src={props.imageBanner}
-          alt={`Imagem do projeto ${props.projectInfo?.title}`}
-        />
-        <ProfileContent>
-          <AvatarContainer>
-            <Avatar
-              alt={`Foto avatar do usuário ${userData?.user.name} ${userData?.user.surname}`}
-              src={avatarPlaceholder}
-              sx={{ width: 40, height: 40 }}
+            <ImageBanner
+              src={props.imageBanner}
+              alt={`Imagem do projeto ${props.projectInfo?.title}`}
             />
-            <UserDataContainer>
-              <h3>
-                {userData?.user.name} {userData?.user.surname}
-              </h3>
-              <span>{formattedDate}</span>
-            </UserDataContainer>
-          </AvatarContainer>
+            <ProfileContent>
+              <AvatarContainer>
+                <Avatar
+                  alt={`Foto avatar do usuário ${userData?.user.name} ${userData?.user.surname}`}
+                  src={avatarPlaceholder}
+                  sx={{ width: 40, height: 40 }}
+                />
+                <UserDataContainer>
+                  <h3>
+                    {userData?.user.name} {userData?.user.surname}
+                  </h3>
+                  <span>{formattedDate}</span>
+                </UserDataContainer>
+              </AvatarContainer>
 
-          <Chip label={tags} />
-        </ProfileContent>
+              <Chip label={tags} />
+            </ProfileContent>
+          </>
+        ) : (
+          <>
+            <CardProfile>
+              <ProfileContent>
+                <AvatarContainer>
+                  <Avatar
+                    alt={`Foto avatar do usuário ${userData?.user.name} ${userData?.user.surname}`}
+                    src={avatarPlaceholder}
+                    sx={{ width: 40, height: 40 }}
+                  />
+                  <UserDataContainer>
+                    <h3>
+                      {userData?.user.name} {userData?.user.surname}
+                    </h3>
+                    <span>{formattedDate}</span>
+                  </UserDataContainer>
+                </AvatarContainer>
+              </ProfileContent>
+              <h1>{title}</h1>
+              <Chip label={tags} />
+            </CardProfile>
 
+            <ImageBanner
+              src={props.imageBanner}
+              alt={`Imagem do projeto ${props.projectInfo?.title}`}
+            />
+          </>
+        )}
         <p>{description}</p>
         <h4>Download</h4>
         <a href={link}>{link}</a>

@@ -21,6 +21,7 @@ import * as z from 'zod'
 import imgSignUp from '../../assets/imgCadastroUpscale.jpg'
 import { useAuth } from '../../hooks/auth'
 import {
+  ErrorMessage,
   FormContainer,
   SignUpContainer,
   SignUpContent,
@@ -30,10 +31,21 @@ import {
 } from './styles'
 
 const registerFormSchema = z.object({
-  name: z.string(),
-  surname: z.string(),
-  email: z.string().email(),
-  password: z.string().min(6),
+  name: z.string().regex(/^[a-zA-Z]+$/, {
+    message: 'O nome e sobrenome só podem conter letras.',
+  }),
+  surname: z.string().regex(/^[a-zA-Z]+$/, {
+    message: 'O nome e sobrenome só podem conter letras.',
+  }),
+  email: z
+    .string()
+    .email({ message: 'Por favor, insira um endereço de e-mail válido.' }),
+  password: z
+    .string()
+    .min(
+      6,
+      'Sua senha deve conter pelo menos 6 caracteres para maior segurança',
+    ),
 })
 
 type RegisterFormSchema = z.infer<typeof registerFormSchema>
@@ -51,7 +63,11 @@ export function SignUp() {
     event.preventDefault()
   }
 
-  const { register, handleSubmit } = useForm<RegisterFormSchema>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormSchema>({
     resolver: zodResolver(registerFormSchema),
   })
 
@@ -107,6 +123,7 @@ export function SignUp() {
               autoComplete="nome"
               {...register('name')}
             />
+
             <TextField
               variant="outlined"
               required
@@ -117,6 +134,11 @@ export function SignUp() {
               {...register('surname')}
             />
           </StyledDesktop>
+          {(errors.name || errors.surname) && (
+            <ErrorMessage>
+              {errors.name?.message || errors.surname?.message}
+            </ErrorMessage>
+          )}
           <TextField
             variant="outlined"
             required
@@ -128,6 +150,7 @@ export function SignUp() {
             {...register('email')}
           />
 
+          {errors.email && <ErrorMessage>{errors.email?.message}</ErrorMessage>}
           <FormControl variant="outlined" fullWidth>
             <InputLabel htmlFor="outlined-adornment-password">
               Password *
@@ -153,6 +176,9 @@ export function SignUp() {
               }
             />
           </FormControl>
+          {errors.password && (
+            <ErrorMessage>{errors.password.message}</ErrorMessage>
+          )}
           <StyledButton
             fullWidth
             type="submit"
