@@ -48,6 +48,9 @@ export const UserDataContainer = styled.div`
     line-height: 1rem;
     color: ${(props) => props.theme['color-neutral-130']};
     opacity: 0.5;
+    &::first-letter {
+      text-transform: uppercase;
+    }
   }
 
   @media (min-width: 978px) {
