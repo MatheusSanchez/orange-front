@@ -16,14 +16,17 @@ export function OptionsButton(props: OptionsButtonProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = () => {
+  const handleClose = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     setAnchorEl(null)
   }
 
-  function wantToDelete() {
+  function wantToDelete(event: React.MouseEvent<HTMLElement>) {
+    event.stopPropagation()
     openAlertModal(props.project_id)
   }
 

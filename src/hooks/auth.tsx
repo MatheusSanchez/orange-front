@@ -17,6 +17,7 @@ interface UserProps {
   created_at?: string
   updated_at?: string
   country?: string
+  photo_url?: string
 }
 
 interface AuthContextType {
@@ -35,9 +36,7 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
-export const AuthContext = createContext(
-  {} as AuthContextType & { updateUserCountry: (country: string) => void },
-)
+export const AuthContext = createContext({} as AuthContextType)
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [userData, setUserData] = useState<{ user: UserProps; token: string }>({
@@ -48,6 +47,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function SignIn(email: string, password: string) {
     try {
       const res = await api.post('/login', { email, password })
+      console.log(res.data)
       const { user, token } = res.data
 
       localStorage.setItem('@squad40:user', JSON.stringify(user))
@@ -104,16 +104,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [])
 
-  const updateUserCountry = (country: string) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      user: {
-        ...prevData.user,
-        country,
-      },
-    }))
-  }
-
   return (
     <AuthContext.Provider
       value={{
@@ -121,7 +111,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         SignUp,
         Logout,
         userData,
-        updateUserCountry,
       }}
     >
       {children}
