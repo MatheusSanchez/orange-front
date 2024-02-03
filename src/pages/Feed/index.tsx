@@ -39,8 +39,6 @@ export function Feed() {
     }
   }
 
-  console.log(projectsData)
-
   useEffect(() => {
     buscarProjetosPorTags()
   }, [chipData])
@@ -65,6 +63,8 @@ export function Feed() {
               userName={project.user_id}
               date={format(new Date(project.created_at), 'dd/MM')}
               tags={project.tags}
+              project_id={project.id}
+              blockOptions
             />
           ))
         ) : (

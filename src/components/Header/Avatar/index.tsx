@@ -1,4 +1,4 @@
-import Logout from '@mui/icons-material/Logout'
+import { Logout as LogoutIcon } from '@mui/icons-material'
 import Settings from '@mui/icons-material/Settings'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
@@ -24,12 +24,12 @@ export default function AccountMenu() {
     setAnchorEl(null)
   }
 
-  const { handleLogout } = useAuth()
+  const { Logout } = useAuth()
   const navigate = useNavigate()
 
-  function signOut() {
-    navigate('/')
-    handleLogout()
+  function handleLogout() {
+    Logout()
+    navigate('/login')
   }
 
   return (
@@ -77,9 +77,9 @@ export default function AccountMenu() {
           </ListItemIcon>
           Editar perfil
         </MenuItem>
-        <MenuItem onClick={signOut}>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <LogoutIcon fontSize="small" />
           </ListItemIcon>
           Sair
         </MenuItem>

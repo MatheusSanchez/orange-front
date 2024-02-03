@@ -1,5 +1,3 @@
-import 'react-toastify/dist/ReactToastify.css'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import {
@@ -15,11 +13,12 @@ import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { TailSpin } from 'react-loader-spinner'
 import { Link } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
 import * as z from 'zod'
 
 import googleIcon from '../../assets/googleIcon.svg'
 import imgLoginUp from '../../assets/imgLoginUpscale.jpg'
+import { ErrorRegisterAlert } from '../../components/Alert'
+import { useAlertContext } from '../../contexts/AlertContext.'
 import { useAuth } from '../../hooks/auth'
 import {
   FormContainer,
@@ -40,7 +39,8 @@ const loginFormSchema = z.object({
 type LoginFormSchema = z.infer<typeof loginFormSchema>
 
 export function SignIn() {
-  const { handleSignIn } = useAuth()
+  const { SignIn } = useAuth()
+  const { showErrorAlert } = useAlertContext()
 
   const [showPassword, setShowPassword] = useState(false)
   const [loadingAuth, setLoadingAuth] = useState(false)
@@ -58,15 +58,21 @@ export function SignIn() {
     resolver: zodResolver(loginFormSchema),
   })
 
-  async function signIn() {
+  async function handleSignIn() {
     setLoadingAuth(true)
     try {
-      await handleSignIn(email, password)
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Erro ao realizar login: ${error.message}`)
-      } else {
-        toast.error(`Erro desconhecido ao realizar login.`)
+      await SignIn(email, password)
+    } catch (error: any) {
+      switch (true) {
+        case error.response && error.response.status === 401:
+          showErrorAlert(`E-mail e/ou senha inválido.`)
+          break
+        case error instanceof Error:
+          showErrorAlert(`Erro ao fazer login: ${error.message}`)
+          break
+        default:
+          showErrorAlert(`Erro ao fazer login.`)
+          break
       }
     } finally {
       setLoadingAuth(false)
@@ -77,18 +83,7 @@ export function SignIn() {
     <SignInContainer>
       <img src={imgLoginUp} alt="" />
       <SignInContent>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
+        <ErrorRegisterAlert />
         <Helmet title="Login" />
         <TitleContainer>Entre no Orange Portfólio</TitleContainer>
         <GoogleButtonContainer>
@@ -98,7 +93,7 @@ export function SignIn() {
           </GoogleButton>
         </GoogleButtonContainer>
         <TextContainer>Faça login com email</TextContainer>
-        <FormContainer onSubmit={handleSubmit(signIn)}>
+        <FormContainer onSubmit={handleSubmit(handleSignIn)}>
           <TextField
             variant="outlined"
             required

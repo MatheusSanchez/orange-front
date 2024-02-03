@@ -46,11 +46,6 @@ const newProjectFormSchema = z.object({
     }),
   link: z.string(),
   description: z.string(),
-  imgFile: z
-    .unknown()
-    .refine((imgFile) => imgFile !== null && imgFile !== undefined, {
-      message: 'Imagem é obrigatória',
-    }),
 })
 
 type NewProjectFormSchema = z.infer<typeof newProjectFormSchema>
@@ -62,6 +57,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
   const [imgFile, setImgFile] = useState<File | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const [imageBanner, setImageBanner] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [projectInfo, setProjectInfo] = useState({
     title: '',
     tags: '',
@@ -97,6 +93,11 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
   }
 
   async function handleCreateNewProject(data: NewProjectFormSchema) {
+    if (imgFile === null) {
+      setErrorMessage('A imagem é obrigatória')
+      return
+    }
+
     setLoadingAuth(true)
     try {
       await newProjectFormSchema.parseAsync(data)
@@ -238,9 +239,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                   </LabelContent>
                 </label>
               </UploadFileInput>
-              {errors.imgFile && (
-                <ErrorMessage>{errors.imgFile.message}</ErrorMessage>
-              )}
+              {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             </UploadFileContent>
           </MainContainer>
           <a style={{ cursor: 'pointer' }} onClick={handleOpenModal}>

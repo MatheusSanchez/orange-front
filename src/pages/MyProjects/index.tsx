@@ -101,29 +101,29 @@ export function MyProjects() {
             </LoaderContainer>
           ) : (
             <>
-              {userProjectsData.length === 0 && chipData.length === 0 && (
+              {userProjectsData.length === 0 && chipData.length === 0 ? (
                 <>
                   <UploadFileContent onClick={handleOpenModal} />
                   <EmptyFileContent />
                   <EmptyFileContent />
                 </>
-              )}
-
-              {userProjectsData.length > 0 && chipData.length === 0
-                ? userProjectsData.map((project) => (
+              ) : (
+                <>
+                  {userProjectsData.map((project) => (
                     <CardMyProject
                       key={project.id}
                       userName={userData?.user.name}
                       date={format(new Date(project.created_at), 'dd/MM')}
                       tags={project.tags}
                       photo_url={project.photo_url}
+                      project_id={project.id}
                       onClick={() => handleProjectClick(project)}
                     />
-                  ))
-                : null}
-
-              {userProjectsData.length === 0 && chipData.length >= 1 && (
-                <EmptySearch>Nenhum projeto encontrado</EmptySearch>
+                  ))}
+                  {chipData.length >= 1 && userProjectsData.length === 0 && (
+                    <EmptySearch>Nenhum projeto encontrado</EmptySearch>
+                  )}
+                </>
               )}
             </>
           )}

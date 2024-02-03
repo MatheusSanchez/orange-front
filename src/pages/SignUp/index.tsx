@@ -1,5 +1,3 @@
-import 'react-toastify/dist/ReactToastify.css'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import {
@@ -15,10 +13,11 @@ import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { TailSpin } from 'react-loader-spinner'
 import { Link } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
 import * as z from 'zod'
 
 import imgSignUp from '../../assets/imgCadastroUpscale.jpg'
+import { ErrorRegisterAlert } from '../../components/Alert'
+import { useAlertContext } from '../../contexts/AlertContext.'
 import { useAuth } from '../../hooks/auth'
 import {
   ErrorMessage,
@@ -31,27 +30,21 @@ import {
 } from './styles'
 
 const registerFormSchema = z.object({
-  name: z.string().regex(/^[a-zA-Z]+$/, {
+  name: z.string().regex(/^[a-zA-ZÀ-ÿ]+$/, {
     message: 'O nome e sobrenome só podem conter letras.',
   }),
-  surname: z.string().regex(/^[a-zA-Z]+$/, {
+  surname: z.string().regex(/^[a-zA-ZÀ-ÿ]+$/, {
     message: 'O nome e sobrenome só podem conter letras.',
   }),
-  email: z
-    .string()
-    .email({ message: 'Por favor, insira um endereço de e-mail válido.' }),
-  password: z
-    .string()
-    .min(
-      6,
-      'Sua senha deve conter pelo menos 6 caracteres para maior segurança',
-    ),
+  email: z.string().email({ message: 'Insira um endereço de e-mail válido.' }),
+  password: z.string().min(6, 'Sua senha deve conter pelo menos 6 caracteres'),
 })
 
 type RegisterFormSchema = z.infer<typeof registerFormSchema>
 
 export function SignUp() {
-  const { handleSignUp } = useAuth()
+  const { SignIn, SignUp } = useAuth()
+  const { showRegisterAlert, showErrorAlert } = useAlertContext()
 
   const [showPassword, setShowPassword] = useState(false)
   const [loadingAuth, setLoadingAuth] = useState(false)
@@ -71,7 +64,7 @@ export function SignUp() {
     resolver: zodResolver(registerFormSchema),
   })
 
-  async function handleCreateUser(data: RegisterFormSchema) {
+  async function handleSignUp(data: RegisterFormSchema) {
     setLoadingAuth(true)
 
     const name = data.name
@@ -80,15 +73,20 @@ export function SignUp() {
     const password = data.password
 
     try {
-      await handleSignUp(name, surname, email, password)
-      toast.success(`Usuário ${name} cadastrado com sucesso!`, {
-        theme: 'colored',
+      await SignUp(name, surname, email, password).then(async () => {
+        await SignIn(email, password).then(() => showRegisterAlert())
       })
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Erro ao cadastrar usuário: ${error.message}`)
-      } else {
-        toast.error(`Erro desconhecido ao cadastrar usuário.`)
+    } catch (error: any) {
+      switch (true) {
+        case error.response && error.response.status === 409:
+          showErrorAlert(`Este e-mail já está em uso.`)
+          break
+        case error instanceof Error:
+          showErrorAlert(`Erro ao cadastrar usuário: ${error.message}`)
+          break
+        default:
+          showErrorAlert(`Erro ao cadastrar usuário.`)
+          break
       }
     } finally {
       setLoadingAuth(false)
@@ -98,21 +96,10 @@ export function SignUp() {
     <SignUpContainer>
       <img src={imgSignUp} alt="" />
       <SignUpContent>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
+        <ErrorRegisterAlert />
         <Helmet title="Cadastro" />
         <TitleContainer>Cadastre-se</TitleContainer>
-        <FormContainer onSubmit={handleSubmit(handleCreateUser)}>
+        <FormContainer onSubmit={handleSubmit(handleSignUp)}>
           <StyledDesktop>
             <TextField
               variant="outlined"

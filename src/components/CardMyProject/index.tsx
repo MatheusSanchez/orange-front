@@ -19,6 +19,8 @@ interface CardMyProjectProps {
   date?: string
   tags?: string[]
   photo_url?: string
+  project_id?: string | undefined
+  blockOptions?: boolean
   onClick?: () => void
 }
 
@@ -36,10 +38,11 @@ export function CardMyProject(props: CardMyProjectProps) {
           className="image-container"
           style={{ backgroundImage: `url(${props.photo_url})` }}
         />
-
-        <OptionContainer>
-          <OptionsButton />
-        </OptionContainer>
+        {props.blockOptions ?? (
+          <OptionContainer>
+            <OptionsButton project_id={props.project_id} />
+          </OptionContainer>
+        )}
       </CardMyProjectContent>
       <ProjectInfoContainer>
         <UserInfoContainer>

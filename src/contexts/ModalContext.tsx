@@ -5,16 +5,26 @@ interface ModalContextType {
   editModalState: boolean
   createModalState: boolean
   deleteModalState: boolean
+  updateProfileModalState: boolean
+  changePasswordModalState: boolean
+  alertErrorModalState: boolean
   errorModalState: boolean
   alertModalState: boolean
+  projectIdToBeDeleted: string | undefined
   openEditModal: () => void
   openCreateModal: () => void
   openDeleteModal: () => void
+  openUpdateProfileModal: () => void
+  openChangePasswordModal: () => void
+  openAlertErrorModal: () => void
   openErrorModal: () => void
-  openAlertModal: () => void
+  openAlertModal: (projectId: string | undefined) => void
   closeEditModal: () => void
   closeCreateModal: () => void
   closeDeleteModal: () => void
+  closeUpdateProfileModal: () => void
+  closeChangePasswordModal: () => void
+  closeAlertErrorModal: () => void
   closeErrorModal: () => void
   closeAlertModal: () => void
 }
@@ -38,12 +48,31 @@ export function ModalProvider({ children }: ModalProviderProps) {
   const openDeleteModal = () => setDeleteModalState(true)
   const closeDeleteModal = () => setDeleteModalState(false)
 
+  const [updateProfileModalState, setUpdateProfileModalState] = useState(false)
+  const openUpdateProfileModal = () => setUpdateProfileModalState(true)
+  const closeUpdateProfileModal = () => setUpdateProfileModalState(false)
+
+  const [changePasswordModalState, setChangePasswordModalState] =
+    useState(false)
+  const openChangePasswordModal = () => setChangePasswordModalState(true)
+  const closeChangePasswordModal = () => setChangePasswordModalState(false)
+
+  const [alertErrorModalState, setAlertErrorModalState] = useState(false)
+  const openAlertErrorModal = () => setAlertErrorModalState(true)
+  const closeAlertErrorModal = () => setAlertErrorModalState(false)
+
   const [errorModalState, setErrorModalState] = useState(false)
   const openErrorModal = () => setErrorModalState(true)
   const closeErrorModal = () => setErrorModalState(false)
 
   const [alertModalState, setAlertModalState] = useState(false)
-  const openAlertModal = () => setAlertModalState(true)
+  const [projectIdToBeDeleted, setProjectIdToBeDeleted] = useState<
+    string | undefined
+  >('')
+  function openAlertModal(projectId: string | undefined) {
+    setAlertModalState(true)
+    setProjectIdToBeDeleted(projectId)
+  }
   const closeAlertModal = () => setAlertModalState(false)
 
   return (
@@ -58,12 +87,22 @@ export function ModalProvider({ children }: ModalProviderProps) {
         deleteModalState,
         openDeleteModal,
         closeDeleteModal,
+        updateProfileModalState,
+        openUpdateProfileModal,
+        closeUpdateProfileModal,
+        changePasswordModalState,
+        openChangePasswordModal,
+        closeChangePasswordModal,
+        alertErrorModalState,
+        openAlertErrorModal,
+        closeAlertErrorModal,
         errorModalState,
         openErrorModal,
         closeErrorModal,
         alertModalState,
         openAlertModal,
         closeAlertModal,
+        projectIdToBeDeleted,
       }}
     >
       {children}

@@ -1,12 +1,16 @@
 import { Outlet } from 'react-router-dom'
 
+import { RegisterAlert } from '../../../components/Alert'
 import { Header } from '../../../components/Header'
 import {
+  AlertError,
   AlertModal,
+  ChangePasswordSucess,
   CreateModalSucess,
   DeleteModalSucess,
   EditModalSucess,
   ErrorModal,
+  UpdateProfileSucess,
 } from '../../../components/Modals'
 import { AppLayoutContainer, OutletContainer } from './styles'
 
@@ -17,8 +21,12 @@ export function AppLayout() {
       <EditModalSucess />
       <CreateModalSucess />
       <DeleteModalSucess />
+      <UpdateProfileSucess />
+      <ChangePasswordSucess />
+      <AlertError />
       <ErrorModal />
       <AlertModal />
+      <RegisterAlert />
       <OutletContainer>
         <Outlet />
       </OutletContainer>
