@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 
 import { useModalContext } from '../../../contexts/ModalContext'
+import { OpenModalCreateNewProject } from '../../OpenModalCreateNewProject'
 
 interface OptionsButtonProps {
   project_id: string | undefined
@@ -14,13 +15,16 @@ interface OptionsButtonProps {
 export function OptionsButton(props: OptionsButtonProps) {
   const { openAlertModal } = useModalContext()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [openModal, setOpenModal] = useState(false)
   const open = Boolean(anchorEl)
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = () => {
+  const handleEditProject = () => {
     setAnchorEl(null)
+    setOpenModal(true)
   }
 
   function wantToDelete() {
@@ -45,7 +49,7 @@ export function OptionsButton(props: OptionsButtonProps) {
         }}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={handleEditProject}
         TransitionComponent={Fade}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -76,13 +80,17 @@ export function OptionsButton(props: OptionsButtonProps) {
           },
         }}
       >
-        <MenuItem sx={{ minWidth: 180 }} onClick={handleClose}>
+        <MenuItem sx={{ minWidth: 180 }} onClick={handleEditProject}>
           Editar
         </MenuItem>
         <MenuItem sx={{ minWidth: 180 }} onClick={wantToDelete}>
           Excluir
         </MenuItem>
       </Menu>
+      <OpenModalCreateNewProject
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </>
   )
 }
