@@ -7,6 +7,7 @@ import { ThreeDots } from 'react-loader-spinner'
 import { CardMyProject } from '../../components/CardMyProject'
 import { CardProfile } from '../../components/CardProfile'
 import { OpenModalCreateNewProject } from '../../components/OpenModalCreateNewProject'
+import { OpenModalViewProject } from '../../components/OpenModalViewProject'
 import { SearchTags } from '../../components/SearchTags'
 import { UploadFileContent } from '../../components/UploadFileContent'
 import { EmptyFileContent } from '../../components/UploadFileContent/EmptyFileContent'
@@ -71,8 +72,43 @@ export function MyProjects() {
     }
   }, [chipData])
 
+  interface ModalState {
+    openModal: boolean
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+    projectInfo: {
+      title: string
+      tags: string
+      link: string
+      description: string
+    }
+    imageBanner: string
+  }
+
+  const [modalState, setModalState] = useState<ModalState>({
+    openModal: false,
+    setOpenModal: () =>
+      setModalState((prev) => ({ ...prev, openModal: false })),
+    projectInfo: {
+      title: '',
+      tags: '',
+      link: '',
+      description: '',
+    },
+    imageBanner: '',
+  })
+
   function handleProjectClick(project: ProjectProps) {
-    console.log(`Projeto clicado! ${project.title}`)
+    setModalState({
+      ...modalState,
+      openModal: true,
+      projectInfo: {
+        title: project.title,
+        tags: project.tags.join(', '),
+        link: project.link,
+        description: project.description,
+      },
+      imageBanner: project.photo_url,
+    })
   }
 
   return (
@@ -129,6 +165,7 @@ export function MyProjects() {
           )}
         </ProjectsContainer>
       </MainContainer>
+      <OpenModalViewProject {...modalState} />
       <OpenModalCreateNewProject
         openModal={openModal}
         setOpenModal={setOpenModal}
