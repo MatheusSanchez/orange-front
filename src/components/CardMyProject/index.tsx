@@ -19,11 +19,18 @@ interface CardMyProjectProps {
   date?: string
   tags?: string[]
   photo_url?: string
+  onClick?: () => void
 }
 
 export function CardMyProject(props: CardMyProjectProps) {
+  const handleProjectClick = () => {
+    if (props.onClick) {
+      props.onClick()
+    }
+  }
+
   return (
-    <CardMyProjectContainer>
+    <CardMyProjectContainer onClick={handleProjectClick}>
       <CardMyProjectContent>
         <div
           className="image-container"

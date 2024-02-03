@@ -65,13 +65,15 @@ export function MyProjects() {
     }
   }
 
-  console.log(chipData)
-
   useEffect(() => {
     if (userData?.user.id) {
       getUserProjects()
     }
   }, [chipData])
+
+  function handleProjectClick(project: ProjectProps) {
+    console.log(`Projeto clicado! ${project.title}`)
+  }
 
   return (
     <MyProjectsContainer>
@@ -115,6 +117,7 @@ export function MyProjects() {
                       date={format(new Date(project.created_at), 'dd/MM')}
                       tags={project.tags}
                       photo_url={project.photo_url}
+                      onClick={() => handleProjectClick(project)}
                     />
                   ))
                 : null}
