@@ -63,6 +63,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
     tags: '',
     link: '',
     description: '',
+    createdAt: '',
   })
 
   const { openErrorModal, openCreateModal } = useModalContext()
@@ -175,7 +176,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
                       ? value
                           .split(',')
                           .map((tag) => tag.trim())
-                          .filter((tag) => tag !== '') // Remove tags vazias
+                          .filter((tag) => tag !== '')
                       : value,
                 })}
                 value={projectInfo.tags}

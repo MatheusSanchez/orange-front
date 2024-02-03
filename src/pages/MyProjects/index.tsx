@@ -13,6 +13,7 @@ import { UploadFileContent } from '../../components/UploadFileContent'
 import { EmptyFileContent } from '../../components/UploadFileContent/EmptyFileContent'
 import { useAuth } from '../../hooks/auth'
 import { ChipData } from '../../interfaces/ChipData'
+import { ModalState } from '../../interfaces/ModalState'
 import { ProjectProps } from '../../interfaces/ProjectProps'
 import { api } from '../../lib/axios'
 import {
@@ -66,24 +67,6 @@ export function MyProjects() {
     }
   }
 
-  useEffect(() => {
-    if (userData?.user.id) {
-      getUserProjects()
-    }
-  }, [chipData])
-
-  interface ModalState {
-    openModal: boolean
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
-    projectInfo: {
-      title: string
-      tags: string
-      link: string
-      description: string
-    }
-    imageBanner: string
-  }
-
   const [modalState, setModalState] = useState<ModalState>({
     openModal: false,
     setOpenModal: () =>
@@ -110,6 +93,12 @@ export function MyProjects() {
       imageBanner: project.photo_url,
     })
   }
+
+  useEffect(() => {
+    if (userData?.user.id) {
+      getUserProjects()
+    }
+  }, [chipData])
 
   return (
     <MyProjectsContainer>
