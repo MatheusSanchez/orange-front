@@ -21,11 +21,18 @@ interface CardMyProjectProps {
   photo_url?: string
   project_id?: string | undefined
   blockOptions?: boolean
+  onClick?: () => void
 }
 
 export function CardMyProject(props: CardMyProjectProps) {
+  const handleProjectClick = () => {
+    if (props.onClick) {
+      props.onClick()
+    }
+  }
+
   return (
-    <CardMyProjectContainer>
+    <CardMyProjectContainer onClick={handleProjectClick}>
       <CardMyProjectContent>
         <div
           className="image-container"

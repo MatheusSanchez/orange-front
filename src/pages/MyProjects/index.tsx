@@ -7,11 +7,13 @@ import { ThreeDots } from 'react-loader-spinner'
 import { CardMyProject } from '../../components/CardMyProject'
 import { CardProfile } from '../../components/CardProfile'
 import { OpenModalCreateNewProject } from '../../components/OpenModalCreateNewProject'
+import { OpenModalViewProject } from '../../components/OpenModalViewProject'
 import { SearchTags } from '../../components/SearchTags'
 import { UploadFileContent } from '../../components/UploadFileContent'
 import { EmptyFileContent } from '../../components/UploadFileContent/EmptyFileContent'
 import { useAuth } from '../../hooks/auth'
 import { ChipData } from '../../interfaces/ChipData'
+import { ModalState } from '../../interfaces/ModalState'
 import { ProjectProps } from '../../interfaces/ProjectProps'
 import { api } from '../../lib/axios'
 import {
@@ -65,6 +67,33 @@ export function MyProjects() {
     }
   }
 
+  const [modalState, setModalState] = useState<ModalState>({
+    openModal: false,
+    setOpenModal: () =>
+      setModalState((prev) => ({ ...prev, openModal: false })),
+    projectInfo: {
+      title: '',
+      tags: '',
+      link: '',
+      description: '',
+    },
+    imageBanner: '',
+  })
+
+  function handleProjectClick(project: ProjectProps) {
+    setModalState({
+      ...modalState,
+      openModal: true,
+      projectInfo: {
+        title: project.title,
+        tags: project.tags.join(', '),
+        link: project.link,
+        description: project.description,
+      },
+      imageBanner: project.photo_url,
+    })
+  }
+
   useEffect(() => {
     if (userData?.user.id) {
       getUserProjects()
@@ -113,6 +142,7 @@ export function MyProjects() {
                       tags={project.tags}
                       photo_url={project.photo_url}
                       project_id={project.id}
+                      onClick={() => handleProjectClick(project)}
                     />
                   ))}
                   {chipData.length >= 1 && userProjectsData.length === 0 && (
@@ -124,6 +154,7 @@ export function MyProjects() {
           )}
         </ProjectsContainer>
       </MainContainer>
+      <OpenModalViewProject {...modalState} />
       <OpenModalCreateNewProject
         openModal={openModal}
         setOpenModal={setOpenModal}

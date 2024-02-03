@@ -1,11 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 
 import { CardMyProject } from '../../components/CardMyProject'
+import { OpenModalViewProject } from '../../components/OpenModalViewProject'
 import { SearchTags } from '../../components/SearchTags'
 import { ChipData } from '../../interfaces/ChipData'
+import { ModalState } from '../../interfaces/ModalState'
 import { ProjectProps } from '../../interfaces/ProjectProps'
 import { api } from '../../lib/axios'
 import {
@@ -17,10 +18,22 @@ import {
 } from './styles'
 
 export function Feed() {
+  const [modalState, setModalState] = useState<ModalState>({
+    openModal: false,
+    setOpenModal: () =>
+      setModalState((prev) => ({ ...prev, openModal: false })),
+    projectInfo: {
+      title: '',
+      tags: '',
+      link: '',
+      description: '',
+    },
+    imageBanner: '',
+  })
   const [chipData, setChipData] = useState<readonly ChipData[]>([])
   const [projectsData, setProjectsData] = useState<ProjectProps[]>([])
 
-  const buscarProjetosPorTags = async () => {
+  const searchProjectByTags = async () => {
     try {
       const res = await api.post('/projects/tags', {
         tags: chipData.map((chip) => chip.label),
@@ -39,8 +52,22 @@ export function Feed() {
     }
   }
 
+  function handleProjectClick(project: ProjectProps) {
+    setModalState({
+      ...modalState,
+      openModal: true,
+      projectInfo: {
+        title: project.title,
+        tags: project.tags.join(', '),
+        link: project.link,
+        description: project.description,
+      },
+      imageBanner: project.photo_url,
+    })
+  }
+
   useEffect(() => {
-    buscarProjetosPorTags()
+    searchProjectByTags()
   }, [chipData])
 
   return (
@@ -65,12 +92,14 @@ export function Feed() {
               tags={project.tags}
               project_id={project.id}
               blockOptions
+              onClick={() => handleProjectClick(project)}
             />
           ))
         ) : (
           <EmptySearch>Nenhum projeto encontrado</EmptySearch>
         )}
       </ProjectsContainer>
+      <OpenModalViewProject {...modalState} />
     </FeedContainer>
   )
 }
