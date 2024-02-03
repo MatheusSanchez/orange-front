@@ -1,8 +1,10 @@
 import Modal from '@mui/material/Modal'
+import { useNavigate } from 'react-router-dom'
 
 import errorSvg from '../../assets/error.svg'
 import sucessSvg from '../../assets/sucess.svg'
 import { useModalContext } from '../../contexts/ModalContext'
+import { api } from '../../lib/axios'
 import {
   AlertContainer,
   BoxContainer,
@@ -12,6 +14,13 @@ import {
 
 export function EditModalSucess() {
   const { editModalState, closeEditModal } = useModalContext()
+  const navigate = useNavigate()
+
+  const handleCloseModal = () => {
+    closeEditModal()
+    navigate(0)
+  }
+
   return (
     <Modal open={editModalState} onClose={closeEditModal}>
       <BoxContainer>
@@ -21,7 +30,7 @@ export function EditModalSucess() {
           buttoncolor="save"
           textcollor="save"
           variant="contained"
-          onClick={closeEditModal}
+          onClick={handleCloseModal}
         >
           Voltar para projetos
         </StyledButton>
@@ -32,6 +41,13 @@ export function EditModalSucess() {
 
 export function CreateModalSucess() {
   const { createModalState, closeCreateModal } = useModalContext()
+  const navigate = useNavigate()
+
+  const handleCloseModal = () => {
+    closeCreateModal()
+    navigate(0)
+  }
+
   return (
     <Modal open={createModalState} onClose={closeCreateModal}>
       <BoxContainer>
@@ -41,7 +57,7 @@ export function CreateModalSucess() {
           buttoncolor="save"
           textcollor="save"
           variant="contained"
-          onClick={closeCreateModal}
+          onClick={handleCloseModal}
         >
           Voltar para projetos
         </StyledButton>
@@ -52,6 +68,13 @@ export function CreateModalSucess() {
 
 export function DeleteModalSucess() {
   const { deleteModalState, closeDeleteModal } = useModalContext()
+  const navigate = useNavigate()
+
+  const handleCloseModal = () => {
+    closeDeleteModal()
+    navigate(0)
+  }
+
   return (
     <Modal open={deleteModalState} onClose={closeDeleteModal}>
       <BoxContainer>
@@ -61,7 +84,7 @@ export function DeleteModalSucess() {
           buttoncolor="save"
           textcollor="save"
           variant="contained"
-          onClick={closeDeleteModal}
+          onClick={handleCloseModal}
         >
           Voltar para projetos
         </StyledButton>
@@ -133,6 +156,7 @@ export function AlertError() {
 
 export function ErrorModal() {
   const { errorModalState, closeErrorModal } = useModalContext()
+
   return (
     <Modal open={errorModalState} onClose={closeErrorModal}>
       <BoxContainer>
@@ -150,14 +174,28 @@ export function ErrorModal() {
     </Modal>
   )
 }
-
 export function AlertModal() {
-  const { alertModalState, closeAlertModal, openDeleteModal } =
-    useModalContext()
+  const {
+    alertModalState,
+    closeAlertModal,
+    openDeleteModal,
+    projectIdToBeDeleted,
+  } = useModalContext()
 
-  const handleDeleteProjectModal = () => {
+  const handleOpenDelete = () => {
     closeAlertModal()
-    openDeleteModal()
+    deleteProject()
+  }
+
+  async function deleteProject() {
+    try {
+      await api.delete(`/project/${projectIdToBeDeleted}`).then(() => {
+        openDeleteModal()
+      })
+    } catch (error) {
+      console.error('Erro ao processar a requisição', error)
+      throw error
+    }
   }
 
   return (
@@ -170,7 +208,7 @@ export function AlertModal() {
             variant="contained"
             buttoncolor="save"
             textcollor="save"
-            onClick={handleDeleteProjectModal}
+            onClick={handleOpenDelete}
           >
             Excluir
           </StyledButton>

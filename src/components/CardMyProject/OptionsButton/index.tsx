@@ -5,14 +5,26 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 
-export function OptionsButton() {
+import { useModalContext } from '../../../contexts/ModalContext'
+
+interface OptionsButtonProps {
+  project_id: string | undefined
+}
+
+export function OptionsButton(props: OptionsButtonProps) {
+  const { openAlertModal } = useModalContext()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
+
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  function wantToDelete() {
+    openAlertModal(props.project_id)
   }
 
   return (
@@ -67,7 +79,7 @@ export function OptionsButton() {
         <MenuItem sx={{ minWidth: 180 }} onClick={handleClose}>
           Editar
         </MenuItem>
-        <MenuItem sx={{ minWidth: 180 }} onClick={handleClose}>
+        <MenuItem sx={{ minWidth: 180 }} onClick={wantToDelete}>
           Excluir
         </MenuItem>
       </Menu>
