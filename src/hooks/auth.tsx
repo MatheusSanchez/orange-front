@@ -21,14 +21,14 @@ interface UserProps {
 
 interface AuthContextType {
   userData?: { user: UserProps; token: string }
-  handleSignUp: (
+  SignUp: (
     name: string,
     surname: string,
     email: string,
     password: string,
   ) => Promise<unknown>
-  handleSignIn: (email: string, password: string) => Promise<unknown>
-  handleLogout: () => void
+  SignIn: (email: string, password: string) => Promise<unknown>
+  Logout: () => void
 }
 
 interface AuthProviderProps {
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     token: '',
   })
 
-  async function handleSignIn(email: string, password: string) {
+  async function SignIn(email: string, password: string) {
     try {
       const res = await api.post('/login', { email, password })
       const { user, token } = res.data
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function handleSignUp(
+  async function SignUp(
     name: string,
     surname: string,
     email: string,
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function handleLogout() {
+  async function Logout() {
     localStorage.removeItem('@squad40:user')
     localStorage.removeItem('@squad40:token')
     setUserData({
@@ -117,9 +117,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   return (
     <AuthContext.Provider
       value={{
-        handleSignIn,
-        handleSignUp,
-        handleLogout,
+        SignIn,
+        SignUp,
+        Logout,
         userData,
         updateUserCountry,
       }}
