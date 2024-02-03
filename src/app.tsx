@@ -1,6 +1,7 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from 'styled-components'
 
+import { AlertProvider } from './contexts/AlertContext.'
 import { ModalProvider } from './contexts/ModalContext'
 import { AuthProvider } from './hooks/auth'
 import { ProjectsProvider } from './hooks/userProjects'
@@ -14,11 +15,13 @@ export function App() {
       <AuthProvider>
         <ProjectsProvider>
           <ModalProvider>
-            <HelmetProvider>
-              <Helmet titleTemplate="%s - Orange Portfólio" />
-              <Routes />
-              <GlobalStyle />
-            </HelmetProvider>
+            <AlertProvider>
+              <HelmetProvider>
+                <Helmet titleTemplate="%s - Orange Portfólio" />
+                <Routes />
+                <GlobalStyle />
+              </HelmetProvider>
+            </AlertProvider>
           </ModalProvider>
         </ProjectsProvider>
       </AuthProvider>
