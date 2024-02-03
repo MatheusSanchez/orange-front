@@ -10,6 +10,7 @@ interface ModalContextType {
   alertErrorModalState: boolean
   errorModalState: boolean
   alertModalState: boolean
+  projectIdToBeDeleted: string | undefined
   openEditModal: () => void
   openCreateModal: () => void
   openDeleteModal: () => void
@@ -17,7 +18,7 @@ interface ModalContextType {
   openChangePasswordModal: () => void
   openAlertErrorModal: () => void
   openErrorModal: () => void
-  openAlertModal: () => void
+  openAlertModal: (projectId: string | undefined) => void
   closeEditModal: () => void
   closeCreateModal: () => void
   closeDeleteModal: () => void
@@ -65,7 +66,13 @@ export function ModalProvider({ children }: ModalProviderProps) {
   const closeErrorModal = () => setErrorModalState(false)
 
   const [alertModalState, setAlertModalState] = useState(false)
-  const openAlertModal = () => setAlertModalState(true)
+  const [projectIdToBeDeleted, setProjectIdToBeDeleted] = useState<
+    string | undefined
+  >('')
+  function openAlertModal(projectId: string | undefined) {
+    setAlertModalState(true)
+    setProjectIdToBeDeleted(projectId)
+  }
   const closeAlertModal = () => setAlertModalState(false)
 
   return (
@@ -95,6 +102,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
         alertModalState,
         openAlertModal,
         closeAlertModal,
+        projectIdToBeDeleted,
       }}
     >
       {children}
