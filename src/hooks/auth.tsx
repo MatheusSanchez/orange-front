@@ -17,7 +17,7 @@ interface UserProps {
   created_at?: string
   updated_at?: string
   country?: string
-  photo_url?: string
+  avatar_url?: string
 }
 
 interface AuthContextType {
@@ -47,7 +47,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function SignIn(email: string, password: string) {
     try {
       const res = await api.post('/login', { email, password })
-      console.log(res.data)
       const { user, token } = res.data
 
       localStorage.setItem('@squad40:user', JSON.stringify(user))

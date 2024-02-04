@@ -140,6 +140,7 @@ export function MyProjects() {
                       userName={userData?.user.name}
                       date={format(new Date(project.created_at), 'dd/MM')}
                       tags={project.tags}
+                      avatar={userData?.user.avatar_url}
                       photo_url={project.photo_url}
                       project_id={project.id}
                       onClick={() => handleProjectClick(project)}

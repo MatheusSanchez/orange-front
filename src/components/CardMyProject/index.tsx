@@ -1,5 +1,6 @@
 import Chip from '@mui/material/Chip'
 
+import { CardMyProjectProps } from '../../interfaces/CardMyProjectProps'
 // import projectPlaceholder from '../../assets/projectPlaceholder.jpg'
 import { OptionsButton } from './OptionsButton'
 import {
@@ -12,17 +13,6 @@ import {
   TagsContainer,
   UserInfoContainer,
 } from './styles'
-
-interface CardMyProjectProps {
-  avatar?: string
-  userName?: string
-  date?: string
-  tags?: string[]
-  photo_url?: string
-  project_id?: string | undefined
-  blockOptions?: boolean
-  onClick?: () => void
-}
 
 export function CardMyProject(props: CardMyProjectProps) {
   const handleProjectClick = () => {

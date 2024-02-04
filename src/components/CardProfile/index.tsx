@@ -17,7 +17,7 @@ export function CardProfile() {
       <AvatarContainer>
         <Avatar
           alt=""
-          src={userData?.user.photo_url}
+          src={userData?.user.avatar_url}
           sx={{ width: 122, height: 122 }}
         />
       </AvatarContainer>

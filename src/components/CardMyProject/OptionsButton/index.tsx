@@ -6,23 +6,31 @@ import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 
 import { useModalContext } from '../../../contexts/ModalContext'
+import { ProjectProps } from '../../../interfaces/ProjectProps'
+import { OpenModalCreateNewProject } from '../../OpenModalCreateNewProject'
 
 interface OptionsButtonProps {
   project_id: string | undefined
+  project?: ProjectProps
 }
 
 export function OptionsButton(props: OptionsButtonProps) {
   const { openAlertModal } = useModalContext()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [openModal, setOpenModal] = useState(false)
+  const [isEditProject, setEditProject] = useState(false)
   const open = Boolean(anchorEl)
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = (event: React.MouseEvent<HTMLElement>) => {
+  const handleEditProject = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
     setAnchorEl(null)
+    setOpenModal(true)
+    setEditProject(true)
   }
 
   function wantToDelete(event: React.MouseEvent<HTMLElement>) {
@@ -48,7 +56,7 @@ export function OptionsButton(props: OptionsButtonProps) {
         }}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={handleEditProject}
         TransitionComponent={Fade}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -79,13 +87,18 @@ export function OptionsButton(props: OptionsButtonProps) {
           },
         }}
       >
-        <MenuItem sx={{ minWidth: 180 }} onClick={handleClose}>
+        <MenuItem sx={{ minWidth: 180 }} onClick={handleEditProject}>
           Editar
         </MenuItem>
         <MenuItem sx={{ minWidth: 180 }} onClick={wantToDelete}>
           Excluir
         </MenuItem>
       </Menu>
+      <OpenModalCreateNewProject
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        isEditProject={isEditProject}
+      />
     </>
   )
 }

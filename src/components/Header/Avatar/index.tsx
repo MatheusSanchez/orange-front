@@ -50,8 +50,9 @@ export default function AccountMenu() {
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar
+              alt={`Imagem do perfil do ${userData?.user.name}`}
               sx={{ width: 40, height: 40 }}
-              src={userData?.user.photo_url}
+              src={userData?.user.avatar_url}
             />
           </IconButton>
         </Tooltip>

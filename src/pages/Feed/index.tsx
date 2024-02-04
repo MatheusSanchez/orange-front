@@ -8,7 +8,7 @@ import { OpenModalViewProject } from '../../components/OpenModalViewProject'
 import { SearchTags } from '../../components/SearchTags'
 import { ChipData } from '../../interfaces/ChipData'
 import { ModalState } from '../../interfaces/ModalState'
-import { ProjectByTagsProps } from '../../interfaces/ProjectByTagsProps copy'
+import { ProjectByTagsProps } from '../../interfaces/ProjectByTagsProps'
 import { api } from '../../lib/axios'
 import {
   EmptySearch,
