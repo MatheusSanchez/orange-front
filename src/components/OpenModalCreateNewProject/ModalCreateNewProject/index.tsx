@@ -20,6 +20,7 @@ import {
   LabelContent,
   MainContainer,
   ModalBox,
+  ShowProject,
   StyledButton,
   UploadFileContent,
   UploadFileInput,
@@ -117,7 +118,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
           description: data.description,
         })
       } else {
-        console.log('Loggin edit route')
         res = await api.put(`/project/${props.projectProps?.id}/edit`, {
           userId: userData?.user.id,
           title: data.title,
@@ -151,7 +151,6 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
 
   const titleText = props.isEditProject ? 'Editar projeto' : 'Adicionar projeto'
 
-  console.log(projectInfo.title)
   return (
     <Modal
       open={props.open}
@@ -262,9 +261,9 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
               {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             </UploadFileContent>
           </MainContainer>
-          <a style={{ cursor: 'pointer' }} onClick={handleOpenModal}>
+          <ShowProject onClick={handleOpenModal}>
             Visualizar publicação
-          </a>
+          </ShowProject>
 
           <ButtonsContainer>
             <StyledButton

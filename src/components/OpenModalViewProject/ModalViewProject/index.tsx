@@ -34,6 +34,7 @@ export function ModalViewProject(props: ModalViewProjectProps) {
   const { title, description, link, tags } = props.projectInfo
 
   const formattedDate = format(new Date(), 'dd/MM')
+  const formattedTags = tags.split(',').map((tag) => tag.trim())
   const isSmallScreen = window.innerWidth <= 978
 
   return (
@@ -72,7 +73,11 @@ export function ModalViewProject(props: ModalViewProjectProps) {
                 </UserDataContainer>
               </AvatarContainer>
 
-              <Chip label={tags} />
+              <div>
+                {formattedTags.map((tag, index) => (
+                  <Chip key={index} label={tag} sx={{ marginLeft: '.5rem' }} />
+                ))}
+              </div>
             </ProfileContent>
           </>
         ) : (
@@ -94,7 +99,11 @@ export function ModalViewProject(props: ModalViewProjectProps) {
                 </AvatarContainer>
               </ProfileContent>
               <h1>{title}</h1>
-              <Chip label={tags} />
+              <div>
+                {formattedTags.map((tag, index) => (
+                  <Chip key={index} label={tag} sx={{ marginLeft: '.5rem' }} />
+                ))}
+              </div>
             </CardProfile>
 
             <ImageBanner
