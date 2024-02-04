@@ -95,6 +95,13 @@ export function DeleteModalSucess() {
 
 export function UpdateProfileSucess() {
   const { updateProfileModalState, closeUpdateProfileModal } = useModalContext()
+  const navigate = useNavigate()
+
+  const handleCloseModal = () => {
+    closeUpdateProfileModal()
+    navigate(0)
+  }
+
   return (
     <Modal open={updateProfileModalState} onClose={closeUpdateProfileModal}>
       <BoxContainer>
@@ -104,7 +111,7 @@ export function UpdateProfileSucess() {
           buttoncolor="save"
           textcollor="save"
           variant="contained"
-          onClick={closeUpdateProfileModal}
+          onClick={handleCloseModal}
         >
           Confirmar
         </StyledButton>
@@ -136,6 +143,12 @@ export function ChangePasswordSucess() {
 
 export function AlertError() {
   const { alertErrorModalState, closeAlertErrorModal } = useModalContext()
+  const navigate = useNavigate()
+
+  const handleCloseModal = () => {
+    closeAlertErrorModal()
+    navigate(0)
+  }
   return (
     <Modal open={alertErrorModalState} onClose={closeAlertErrorModal}>
       <BoxContainer>
@@ -145,7 +158,7 @@ export function AlertError() {
           buttoncolor="save"
           textcollor="save"
           variant="contained"
-          onClick={closeAlertErrorModal}
+          onClick={handleCloseModal}
         >
           Confirmar
         </StyledButton>

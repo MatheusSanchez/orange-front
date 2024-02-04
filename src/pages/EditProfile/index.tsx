@@ -1,13 +1,17 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import { Avatar, InputLabel, MenuItem, TextField } from '@mui/material'
 import * as countriesList from 'countries-list'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { z } from 'zod'
 
 import avatarPlaceholder from '../../assets/avatarPlaceholder.png'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useAuth } from '../../hooks/auth'
+import { api } from '../../lib/axios'
 import {
   AvatarContainer,
   EditProfileContainer,
@@ -18,12 +22,21 @@ import {
   TextContainer,
 } from './styles'
 
+const editUserSchema = z.object({
+  name: z.string(),
+  surname: z.string(),
+  country: z.string(),
+})
+
+type EditUserSchema = z.infer<typeof editUserSchema>
+
 export function EditProfile() {
   const { userData } = useAuth()
   const { openUpdateProfileModal, openAlertErrorModal } = useModalContext()
-  const [selectedCountry, setSelectedCountry] = useState(
-    userData?.user?.country || '',
-  )
+
+  const { register, handleSubmit, reset } = useForm<EditUserSchema>({
+    resolver: zodResolver(editUserSchema),
+  })
 
   const allCountries = Object.values(countriesList.countries)
 
@@ -32,9 +45,21 @@ export function EditProfile() {
   ) => {
     setSelectedCountry(event.target.value as string)
   }
+  async function handleUpdateProfile(data: EditUserSchema) {
+    const { name, surname, country } = data
+    reset()
 
-  const handleUpdateProfile = () => {
-    if (selectedCountry !== userData?.user?.country) {
+    const editUserResponse = await api.put(`/user/${userData?.user.id}/edit`, {
+      name,
+      surname,
+      country,
+    })
+    localStorage.setItem(
+      '@squad40:user',
+      JSON.stringify(editUserResponse.data.user),
+    )
+
+    if (editUserResponse.status === 200) {
       openUpdateProfileModal()
     } else {
       openAlertErrorModal()
@@ -59,7 +84,7 @@ export function EditProfile() {
         <CreateOutlinedIcon />
       </AvatarContainer>
       <MainContainer>
-        <InputsContainer>
+        <InputsContainer onSubmit={handleSubmit(handleUpdateProfile)}>
           <NameContainer>
             <div>
               <InputLabel htmlFor="name">Nome</InputLabel>
@@ -68,22 +93,26 @@ export function EditProfile() {
                 fullWidth
                 type="text"
                 id="name"
-                name="name"
-                placeholder={userData?.user.name}
+                required
+                {...register('name')}
+                defaultValue={userData?.user.name}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </div>
             <div>
-              <InputLabel htmlFor="surname">Sobrenome</InputLabel>
+              <InputLabel htmlFor="surname" {...register('surname')}>
+                Sobrenome
+              </InputLabel>
               <TextField
                 variant="outlined"
                 fullWidth
                 type="text"
                 id="surname"
-                name="surname"
-                placeholder={userData?.user.surname}
+                {...register('surname')}
+                required
+                defaultValue={userData?.user.surname}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -96,8 +125,8 @@ export function EditProfile() {
             variant="outlined"
             fullWidth
             id="country"
-            name="country"
-            placeholder={userData?.user.country}
+            {...register('country')}
+            required
             defaultValue={userData?.user.country}
             onChange={handleCountryChange}
             InputLabelProps={{
@@ -110,15 +139,11 @@ export function EditProfile() {
               </MenuItem>
             ))}
           </TextField>
+          <StyledButton fullWidth type="submit" variant="contained">
+            Atualizar
+          </StyledButton>
         </InputsContainer>
-        <StyledButton
-          fullWidth
-          type="button"
-          variant="contained"
-          onClick={handleUpdateProfile}
-        >
-          Atualizar
-        </StyledButton>
+
         <Link to="/configuracoes" className="AccountSettings">
           Clique aqui para editar as configurações da conta
         </Link>
