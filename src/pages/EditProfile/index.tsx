@@ -3,7 +3,6 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import { Avatar, InputLabel, MenuItem, TextField } from '@mui/material'
 import * as countriesList from 'countries-list'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { z } from 'zod'
@@ -40,11 +39,6 @@ export function EditProfile() {
 
   const allCountries = Object.values(countriesList.countries)
 
-  const handleCountryChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
-  ) => {
-    setSelectedCountry(event.target.value as string)
-  }
   async function handleUpdateProfile(data: EditUserSchema) {
     const { name, surname, country } = data
     reset()
@@ -128,7 +122,6 @@ export function EditProfile() {
             {...register('country')}
             required
             defaultValue={userData?.user.country}
-            onChange={handleCountryChange}
             InputLabelProps={{
               shrink: false,
             }}
