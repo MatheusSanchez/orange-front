@@ -39,7 +39,7 @@ export const MainContainer = styled.div`
   }
 `
 
-export const InputsContainer = styled.div`
+export const InputsContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
