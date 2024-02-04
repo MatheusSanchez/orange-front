@@ -2,8 +2,14 @@ import styled from 'styled-components'
 
 export const HeaderContainer = styled.header`
   width: 100%;
-  background: #113;
+  background: ${(props) => props.theme['color-principal-100']};
   min-width: 320px;
+
+  @media (max-width: 978px) {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    filter: drop-shadow(0px 5px 4px #00000050);
+  }
 `
 
 export const HeaderContent = styled.div`
