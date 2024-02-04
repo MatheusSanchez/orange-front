@@ -1,6 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, ReactNode, useContext, useState } from 'react'
 
+import { ProjectByTagsProps } from '../interfaces/ProjectByTagsProps'
+import { api } from '../lib/axios'
+
 interface ModalContextType {
   editModalState: boolean
   createModalState: boolean
@@ -11,6 +14,9 @@ interface ModalContextType {
   errorModalState: boolean
   alertModalState: boolean
   projectIdToBeDeleted: string | undefined
+  editProjectModalState: boolean
+  projectIdToBeEdited: string | undefined
+  projectData: ProjectByTagsProps | null
   openEditModal: () => void
   openCreateModal: () => void
   openDeleteModal: () => void
@@ -19,6 +25,7 @@ interface ModalContextType {
   openAlertErrorModal: () => void
   openErrorModal: () => void
   openAlertModal: (projectId: string | undefined) => void
+  openEditProjectModal: (projectId: string | undefined) => void
   closeEditModal: () => void
   closeCreateModal: () => void
   closeDeleteModal: () => void
@@ -27,6 +34,7 @@ interface ModalContextType {
   closeAlertErrorModal: () => void
   closeErrorModal: () => void
   closeAlertModal: () => void
+  closeEditProjectModal: () => void
 }
 
 export const ModalContext = createContext({} as ModalContextType)
@@ -75,6 +83,24 @@ export function ModalProvider({ children }: ModalProviderProps) {
   }
   const closeAlertModal = () => setAlertModalState(false)
 
+  const [editProjectModalState, setEditProjectModalState] = useState(false)
+  const [projectIdToBeEdited, setProjectIdToBeEdited] = useState<
+    string | undefined
+  >('')
+  const [projectData, setProjectData] = useState<ProjectByTagsProps>(
+    {} as ProjectByTagsProps,
+  )
+  async function openEditProjectModal(projectId: string | undefined) {
+    setEditProjectModalState(true)
+    setProjectIdToBeEdited(projectId)
+    const response = await api.get(`/project/${projectId}`)
+    setProjectData(response.data.project)
+  }
+  function closeEditProjectModal() {
+    setEditProjectModalState(false)
+    setProjectData({} as ProjectByTagsProps)
+  }
+
   return (
     <ModalContext.Provider
       value={{
@@ -103,6 +129,11 @@ export function ModalProvider({ children }: ModalProviderProps) {
         openAlertModal,
         closeAlertModal,
         projectIdToBeDeleted,
+        editProjectModalState,
+        projectIdToBeEdited,
+        openEditProjectModal,
+        closeEditProjectModal,
+        projectData,
       }}
     >
       {children}

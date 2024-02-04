@@ -15,15 +15,16 @@ import {
 } from './styles'
 
 export function CardMyProject(props: CardMyProjectProps) {
-  const handleProjectClick = () => {
+  const handleProjectClick = (event: React.MouseEvent<HTMLElement>) => {
     if (props.onClick) {
+      event.stopPropagation()
       props.onClick()
     }
   }
 
   return (
-    <CardMyProjectContainer onClick={handleProjectClick}>
-      <CardMyProjectContent>
+    <CardMyProjectContainer>
+      <CardMyProjectContent onClick={handleProjectClick}>
         <div
           className="image-container"
           style={{ backgroundImage: `url(${props.photo_url})` }}

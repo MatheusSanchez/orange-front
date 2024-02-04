@@ -7,7 +7,6 @@ import { useState } from 'react'
 
 import { useModalContext } from '../../../contexts/ModalContext'
 import { ProjectProps } from '../../../interfaces/ProjectProps'
-import { OpenModalCreateNewProject } from '../../OpenModalCreateNewProject'
 
 interface OptionsButtonProps {
   project_id: string | undefined
@@ -15,10 +14,8 @@ interface OptionsButtonProps {
 }
 
 export function OptionsButton(props: OptionsButtonProps) {
-  const { openAlertModal } = useModalContext()
+  const { openAlertModal, openEditProjectModal } = useModalContext()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [openModal, setOpenModal] = useState(false)
-  const [isEditProject, setEditProject] = useState(false)
   const open = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,16 +23,14 @@ export function OptionsButton(props: OptionsButtonProps) {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleEditProject = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation()
-    setAnchorEl(null)
-    setOpenModal(true)
-    setEditProject(true)
-  }
-
   function wantToDelete(event: React.MouseEvent<HTMLElement>) {
     event.stopPropagation()
     openAlertModal(props.project_id)
+  }
+
+  function handleOpenModalForEditProject(event: React.MouseEvent<HTMLElement>) {
+    event.stopPropagation()
+    openEditProjectModal(props.project_id)
   }
 
   return (
@@ -56,7 +51,7 @@ export function OptionsButton(props: OptionsButtonProps) {
         }}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleEditProject}
+        onClose={() => setAnchorEl(null)}
         TransitionComponent={Fade}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -87,18 +82,16 @@ export function OptionsButton(props: OptionsButtonProps) {
           },
         }}
       >
-        <MenuItem sx={{ minWidth: 180 }} onClick={handleEditProject}>
+        <MenuItem
+          sx={{ minWidth: 180 }}
+          onClick={handleOpenModalForEditProject}
+        >
           Editar
         </MenuItem>
         <MenuItem sx={{ minWidth: 180 }} onClick={wantToDelete}>
           Excluir
         </MenuItem>
       </Menu>
-      <OpenModalCreateNewProject
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        isEditProject={isEditProject}
-      />
     </>
   )
 }
