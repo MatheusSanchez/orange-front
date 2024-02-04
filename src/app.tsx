@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from 'styled-components'
 
@@ -12,19 +13,21 @@ import { defaultTheme } from './styles/Themes/defaultTheme'
 export function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <AuthProvider>
-        <ProjectsProvider>
-          <ModalProvider>
-            <AlertProvider>
-              <HelmetProvider>
-                <Helmet titleTemplate="%s - Orange Portfólio" />
-                <Routes />
-                <GlobalStyle />
-              </HelmetProvider>
-            </AlertProvider>
-          </ModalProvider>
-        </ProjectsProvider>
-      </AuthProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <AuthProvider>
+          <ProjectsProvider>
+            <ModalProvider>
+              <AlertProvider>
+                <HelmetProvider>
+                  <Helmet titleTemplate="%s - Orange Portfólio" />
+                  <Routes />
+                  <GlobalStyle />
+                </HelmetProvider>
+              </AlertProvider>
+            </ModalProvider>
+          </ProjectsProvider>
+        </AuthProvider>
+      </GoogleOAuthProvider>
     </ThemeProvider>
   )
 }

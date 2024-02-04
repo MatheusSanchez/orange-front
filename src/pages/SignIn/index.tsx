@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import {
@@ -8,6 +10,8 @@ import {
   OutlinedInput,
   TextField,
 } from '@mui/material'
+import { GoogleLogin } from '@react-oauth/google'
+import { jwtDecode } from 'jwt-decode'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
@@ -15,14 +19,13 @@ import { TailSpin } from 'react-loader-spinner'
 import { Link } from 'react-router-dom'
 import * as z from 'zod'
 
-import googleIcon from '../../assets/googleIcon.svg'
 import imgLoginUp from '../../assets/imgLoginUpscale.jpg'
 import { ErrorRegisterAlert } from '../../components/Alert'
 import { useAlertContext } from '../../contexts/AlertContext.'
 import { useAuth } from '../../hooks/auth'
+import { api } from '../../lib/axios'
 import {
   FormContainer,
-  GoogleButton,
   GoogleButtonContainer,
   SignInContainer,
   SignInContent,
@@ -39,8 +42,8 @@ const loginFormSchema = z.object({
 type LoginFormSchema = z.infer<typeof loginFormSchema>
 
 export function SignIn() {
-  const { SignIn } = useAuth()
-  const { showErrorAlert } = useAlertContext()
+  const { SignIn, SignUpGoogle } = useAuth()
+  const { showErrorAlert, showRegisterAlert } = useAlertContext()
 
   const [showPassword, setShowPassword] = useState(false)
   const [loadingAuth, setLoadingAuth] = useState(false)
@@ -79,6 +82,14 @@ export function SignIn() {
     }
   }
 
+  interface DecodedCredential {
+    email: string
+    family_name?: string
+    given_name: string
+    picture?: string
+    jti: string
+  }
+
   return (
     <SignInContainer>
       <img src={imgLoginUp} alt="" />
@@ -87,10 +98,60 @@ export function SignIn() {
         <Helmet title="Login" />
         <TitleContainer>Entre no Orange Portfólio</TitleContainer>
         <GoogleButtonContainer>
-          <GoogleButton>
-            <img src={googleIcon} alt="" />
-            Entrar com Google
-          </GoogleButton>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              if (!credentialResponse.credential) {
+                showErrorAlert(`Erro ao autenticar com o Google`)
+                return
+              }
+
+              const credentialResponseDecoded = jwtDecode(
+                credentialResponse.credential,
+              ) as DecodedCredential
+
+              const { email, family_name, given_name, picture } =
+                credentialResponseDecoded
+
+              const name = given_name
+              const surname = family_name || ''
+              const avatar_url = picture
+              const is_google = true
+              const password = email
+
+              try {
+                const searchUser = await api.get('/user', {
+                  params: { email },
+                })
+
+                if (searchUser.status === 200) {
+                  await SignIn(email, password)
+                } else {
+                  throw new Error(`Usuário não encontrado`)
+                }
+              } catch (error: any) {
+                if (error.response && error.response.status === 404) {
+                  await SignUpGoogle(
+                    name,
+                    email,
+                    password,
+                    is_google,
+                    surname,
+                    avatar_url,
+                  )
+                    .then(() => SignIn(email, password))
+                    .then(() => showRegisterAlert())
+                } else if (error.response && error.response.status === 401) {
+                  showErrorAlert(`Este e-mail já foi cadastrado`)
+                } else if (error.response && error.response.status === 409) {
+                  showErrorAlert(`Este e-mail já foi cadastrado`)
+                } else if (error instanceof Error) {
+                  showErrorAlert(`Erro ao autenticar usuário: ${error.message}`)
+                } else {
+                  showErrorAlert(`Erro ao autenticar usuário`)
+                }
+              }
+            }}
+          />
         </GoogleButtonContainer>
         <TextContainer>Faça login com email</TextContainer>
         <FormContainer onSubmit={handleSubmit(handleSignIn)}>
