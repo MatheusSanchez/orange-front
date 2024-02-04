@@ -6,28 +6,35 @@ import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 
 import { useModalContext } from '../../../contexts/ModalContext'
+import { ProjectProps } from '../../../interfaces/ProjectProps'
 import { OpenModalCreateNewProject } from '../../OpenModalCreateNewProject'
 
 interface OptionsButtonProps {
   project_id: string | undefined
+  project?: ProjectProps
 }
 
 export function OptionsButton(props: OptionsButtonProps) {
   const { openAlertModal } = useModalContext()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [openModal, setOpenModal] = useState(false)
+  const [isEditProject, setEditProject] = useState(false)
   const open = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
 
-  const handleEditProject = () => {
+  const handleEditProject = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     setAnchorEl(null)
     setOpenModal(true)
+    setEditProject(true)
   }
 
-  function wantToDelete() {
+  function wantToDelete(event: React.MouseEvent<HTMLElement>) {
+    event.stopPropagation()
     openAlertModal(props.project_id)
   }
 
@@ -90,6 +97,7 @@ export function OptionsButton(props: OptionsButtonProps) {
       <OpenModalCreateNewProject
         openModal={openModal}
         setOpenModal={setOpenModal}
+        isEditProject={isEditProject}
       />
     </>
   )

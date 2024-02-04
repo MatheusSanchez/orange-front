@@ -9,6 +9,7 @@ import { z } from 'zod'
 
 import { useModalContext } from '../../../contexts/ModalContext'
 import { useAuth } from '../../../hooks/auth'
+import { ProjectProps } from '../../../interfaces/ProjectProps'
 import { api } from '../../../lib/axios'
 import { OpenModalViewProject } from '../../OpenModalViewProject'
 import {
@@ -29,6 +30,8 @@ interface ModalCreateNewProjectProps {
   preview: string | undefined
   setPreview: React.Dispatch<React.SetStateAction<string | undefined>>
   handleClose: () => void
+  isEditProject?: boolean
+  projectProps?: ProjectProps
 }
 
 const newProjectFormSchema = z.object({
@@ -133,15 +136,18 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
     setOpenModal(true)
   }
 
+  const titleText = props.isEditProject ? 'Editar projeto' : 'Adicionar projeto'
+
+  console.log(projectInfo.title)
   return (
     <Modal
       open={props.open}
       onClose={props.handleClose}
-      aria-labelledby="Adicionar projeto"
+      aria-labelledby={titleText}
     >
       <ModalBox>
-        <Helmet title="Adicionar projeto" />
-        <h2>Adicionar projeto</h2>
+        <Helmet title={titleText} />
+        <h2>{titleText}</h2>
         <FormContainer onSubmit={handleSubmit(handleCreateNewProject)}>
           <MainContainer>
             <InputsContainer>

@@ -1,18 +1,20 @@
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ThreeDots } from 'react-loader-spinner'
 
 import { CardMyProject } from '../../components/CardMyProject'
 import { OpenModalViewProject } from '../../components/OpenModalViewProject'
 import { SearchTags } from '../../components/SearchTags'
 import { ChipData } from '../../interfaces/ChipData'
 import { ModalState } from '../../interfaces/ModalState'
-import { ProjectProps } from '../../interfaces/ProjectProps'
+import { ProjectByTagsProps } from '../../interfaces/ProjectByTagsProps'
 import { api } from '../../lib/axios'
 import {
   EmptySearch,
   FeedContainer,
   InputContainer,
+  LoaderContainer,
   ProjectsContainer,
   SloganContainer,
 } from './styles'
@@ -31,28 +33,32 @@ export function Feed() {
     imageBanner: '',
   })
   const [chipData, setChipData] = useState<readonly ChipData[]>([])
-  const [projectsData, setProjectsData] = useState<ProjectProps[]>([])
+  const [projectsData, setProjectsData] = useState<ProjectByTagsProps[]>([])
+  const [loadingInfo, setLoadingInfo] = useState(false)
 
   const searchProjectByTags = async () => {
+    setLoadingInfo(true)
     try {
       const res = await api.post('/projects/tags', {
         tags: chipData.map((chip) => chip.label),
       })
 
       const allProjects = res.data.projects
-
       const allProjectsSorted = allProjects.sort(
-        (a: ProjectProps, b: ProjectProps) =>
+        (a: ProjectByTagsProps, b: ProjectByTagsProps) =>
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       )
 
       setProjectsData(allProjectsSorted)
     } catch (error) {
       console.error('Erro na requisição:', error)
+      throw error
+    } finally {
+      setLoadingInfo(false)
     }
   }
 
-  function handleProjectClick(project: ProjectProps) {
+  function handleProjectClick(project: ProjectByTagsProps) {
     setModalState({
       ...modalState,
       openModal: true,
@@ -83,20 +89,36 @@ export function Feed() {
         <SearchTags chipData={chipData} setChipData={setChipData} />
       </InputContainer>
       <ProjectsContainer>
-        {projectsData.length > 0 ? (
-          projectsData.map((project) => (
-            <CardMyProject
-              key={project.id}
-              userName={project.user_id}
-              date={format(new Date(project.created_at), 'dd/MM')}
-              tags={project.tags}
-              project_id={project.id}
-              blockOptions
-              onClick={() => handleProjectClick(project)}
+        {loadingInfo ? (
+          <LoaderContainer>
+            <ThreeDots
+              height="100"
+              width="100"
+              color="#ff8833"
+              radius="1"
+              ariaLabel="tail-spin-loading"
             />
-          ))
+          </LoaderContainer>
         ) : (
-          <EmptySearch>Nenhum projeto encontrado</EmptySearch>
+          <>
+            {projectsData.length > 0 ? (
+              projectsData.map((project) => (
+                <CardMyProject
+                  key={project.id}
+                  userName={project.user.name}
+                  date={format(new Date(project.created_at), 'dd/MM')}
+                  tags={project.tags}
+                  project_id={project.id}
+                  avatar={project.user.avatar_url}
+                  photo_url={project.photo_url}
+                  onClick={() => handleProjectClick(project)}
+                  blockOptions
+                />
+              ))
+            ) : (
+              <EmptySearch>Nenhum projeto encontrado</EmptySearch>
+            )}
+          </>
         )}
       </ProjectsContainer>
       <OpenModalViewProject {...modalState} />

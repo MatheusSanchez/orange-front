@@ -19,7 +19,7 @@ import {
 } from './styles'
 
 export function EditProfile() {
-  const { userData, updateUserCountry } = useAuth()
+  const { userData } = useAuth()
   const { openUpdateProfileModal, openAlertErrorModal } = useModalContext()
   const [selectedCountry, setSelectedCountry] = useState(
     userData?.user?.country || '',
@@ -36,7 +36,6 @@ export function EditProfile() {
   const handleUpdateProfile = () => {
     if (selectedCountry !== userData?.user?.country) {
       openUpdateProfileModal()
-      updateUserCountry(selectedCountry)
     } else {
       openAlertErrorModal()
     }
@@ -98,7 +97,8 @@ export function EditProfile() {
             fullWidth
             id="country"
             name="country"
-            defaultValue={userData?.user.country || ''}
+            placeholder={userData?.user.country}
+            defaultValue={userData?.user.country}
             onChange={handleCountryChange}
             InputLabelProps={{
               shrink: false,

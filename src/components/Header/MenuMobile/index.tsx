@@ -8,6 +8,7 @@ export function MenuMobile() {
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
+    event.stopPropagation()
   }
   const handleClose = () => {
     setAnchorEl(null)

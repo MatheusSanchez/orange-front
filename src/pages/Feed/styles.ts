@@ -71,3 +71,11 @@ export const EmptySearch = styled.p`
   display: flex;
   align-self: center;
 `
+
+export const LoaderContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+`

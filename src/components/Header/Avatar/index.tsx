@@ -10,21 +10,26 @@ import Tooltip from '@mui/material/Tooltip'
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import avatarPlaceholder from '../../../assets/avatarPlaceholder.png'
 import { useAuth } from '../../../hooks/auth'
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
+
   const handleEditProfileClose = () => {
-    navigate('/editar-perfil')
     setAnchorEl(null)
   }
 
-  const { Logout } = useAuth()
+  const handleNavigateEditProfile = () => {
+    setAnchorEl(null)
+    navigate('/editar-perfil')
+  }
+
+  const { Logout, userData } = useAuth()
   const navigate = useNavigate()
 
   function handleLogout() {
@@ -44,7 +49,11 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 40, height: 40 }} src={avatarPlaceholder} />
+            <Avatar
+              alt={`Imagem do perfil do ${userData?.user.name}`}
+              sx={{ width: 40, height: 40 }}
+              src={userData?.user.avatar_url}
+            />
           </IconButton>
         </Tooltip>
       </Box>
@@ -53,7 +62,7 @@ export default function AccountMenu() {
         id="account-menu"
         open={open}
         onClose={handleEditProfileClose}
-        onClick={handleEditProfileClose}
+        // onClick={handleEditProfileClose}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -71,7 +80,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'left', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleEditProfileClose}>
+        <MenuItem onClick={handleNavigateEditProfile}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
