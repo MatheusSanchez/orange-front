@@ -13,7 +13,6 @@ interface UserProps {
   name?: string
   surname?: string
   email?: string
-  password?: string
   created_at?: string
   updated_at?: string
   country?: string
@@ -47,13 +46,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function SignIn(email: string, password: string) {
     try {
       const res = await api.post('/login', { email, password })
-      const { user, token } = res.data
-
-      localStorage.setItem('@squad40:user', JSON.stringify(user))
-      localStorage.setItem('@squad40:token', token)
-
+      const { user: userData, token } = res.data
       api.defaults.headers.common.Authorization = `Bearer ${token}`
 
+      localStorage.setItem('@squad40:token', token)
+
+      const getUserByIdResponse = await api.get(`/user/${userData.id}`)
+      const { user } = getUserByIdResponse.data
+
+      localStorage.setItem('@squad40:user', JSON.stringify(user))
       setUserData({ user, token })
     } catch (error) {
       console.error('Erro ao processar a requisição', error)
