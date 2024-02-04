@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   createContext,
   ReactNode,
@@ -26,6 +27,14 @@ interface AuthContextType {
     surname: string,
     email: string,
     password: string,
+  ) => Promise<unknown>
+  SignUpGoogle: (
+    name: string,
+    email: string,
+    password: string,
+    is_google: boolean,
+    surname?: string,
+    avatar_url?: string,
   ) => Promise<unknown>
   SignIn: (email: string, password: string) => Promise<unknown>
   Logout: () => void
@@ -76,6 +85,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function SignUpGoogle(
+    name: string,
+    email: string,
+    password: string,
+    is_google: boolean,
+    surname?: string,
+    avatar_url?: string,
+  ) {
+    try {
+      await api.post('/user', {
+        name,
+        email,
+        password,
+        is_google,
+        surname,
+        avatar_url,
+      })
+    } catch (error) {
+      console.error('Erro ao processar a requisição', error)
+      throw error
+    }
+  }
+
   async function Logout() {
     localStorage.removeItem('@squad40:user')
     localStorage.removeItem('@squad40:token')
@@ -109,6 +141,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       value={{
         SignIn,
         SignUp,
+        SignUpGoogle,
         Logout,
         userData,
       }}
