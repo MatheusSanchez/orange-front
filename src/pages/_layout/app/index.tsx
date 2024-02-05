@@ -9,6 +9,7 @@ import {
   CreateModalSucess,
   DeleteModalSucess,
   EditModalSucess,
+  EditProjectModal,
   ErrorModal,
   UpdateProfileSucess,
 } from '../../../components/Modals'
@@ -27,6 +28,7 @@ export function AppLayout() {
       <ErrorModal />
       <AlertModal />
       <RegisterAlert />
+      <EditProjectModal />
       <OutletContainer>
         <Outlet />
       </OutletContainer>
