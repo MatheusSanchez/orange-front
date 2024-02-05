@@ -105,6 +105,7 @@ export function SignIn() {
                 return
               }
 
+              setLoadingAuth(true)
               const credentialResponseDecoded = jwtDecode(
                 credentialResponse.credential,
               ) as DecodedCredential
@@ -149,6 +150,8 @@ export function SignIn() {
                 } else {
                   showErrorAlert(`Erro ao autenticar usuário`)
                 }
+              } finally {
+                setLoadingAuth(false)
               }
             }}
           />
