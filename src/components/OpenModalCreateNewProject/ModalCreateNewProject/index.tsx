@@ -107,25 +107,13 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
     try {
       await newProjectFormSchema.parseAsync(data)
 
-      let res
-
-      if (props.isEditProject === false) {
-        res = await api.post(`/user/${userData?.user.id}/project`, {
-          userId: userData?.user.id,
-          title: data.title,
-          tags: data.tags,
-          link: data.link,
-          description: data.description,
-        })
-      } else {
-        res = await api.put(`/project/${props.projectProps?.id}/edit`, {
-          userId: userData?.user.id,
-          title: data.title,
-          tags: data.tags,
-          link: data.link,
-          description: data.description,
-        })
-      }
+      const res = await api.post(`/user/${userData?.user.id}/project`, {
+        userId: userData?.user.id,
+        title: data.title,
+        tags: data.tags,
+        link: data.link,
+        description: data.description,
+      })
 
       if (imgFile) {
         const fileUploadForm = new FormData()
