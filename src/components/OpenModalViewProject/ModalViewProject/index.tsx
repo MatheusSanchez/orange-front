@@ -115,9 +115,9 @@ export function ModalViewProject(props: ModalViewProjectProps) {
         )}
         <p>{description}</p>
         <h4>Download</h4>
-        <Link to={link} target="_blank">
+        <a href={`http://${link}`} target="_blank" rel="noopener noreferrer">
           {link}
-        </Link>
+        </a>
       </ModalBox>
     </Modal>
   )
