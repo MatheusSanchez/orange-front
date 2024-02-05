@@ -1,6 +1,7 @@
 import { Avatar, Chip, Modal } from '@mui/material'
 import { format } from 'date-fns'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 
 import avatarPlaceholder from '../../../assets/avatarPlaceholder.png'
 import { useAuth } from '../../../hooks/auth'
@@ -114,7 +115,9 @@ export function ModalViewProject(props: ModalViewProjectProps) {
         )}
         <p>{description}</p>
         <h4>Download</h4>
-        <a href={link}>{link}</a>
+        <Link to={link} target="_blank">
+          {link}
+        </Link>
       </ModalBox>
     </Modal>
   )
