@@ -117,12 +117,9 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
       if (imgFile) {
         const fileUploadForm = new FormData()
         fileUploadForm.append('avatar', imgFile)
-        await api
-          .post(`/project/${res.data.project.id}/photo`, fileUploadForm)
-          .then(() => {
-            openCreateModal()
-          })
+        await api.post(`/project/${res.data.project.id}/photo`, fileUploadForm)
       }
+      openCreateModal()
     } catch (error) {
       openErrorModal()
     } finally {

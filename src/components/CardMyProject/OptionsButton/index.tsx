@@ -49,6 +49,9 @@ export function OptionsButton(props: OptionsButtonProps) {
         MenuListProps={{
           'aria-labelledby': 'fade-button',
         }}
+        onClick={(event) => {
+          event.stopPropagation()
+        }}
         anchorEl={anchorEl}
         open={open}
         onClose={() => setAnchorEl(null)}

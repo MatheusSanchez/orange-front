@@ -311,12 +311,10 @@ export function EditProjectModal() {
       if (imgFile) {
         const fileUploadForm = new FormData()
         fileUploadForm.append('avatar', imgFile)
-        await api
-          .post(`/project/${res.data.project.id}/photo`, fileUploadForm)
-          .then(() => {
-            openEditModal()
-          })
+        await api.post(`/project/${res.data.project.id}/photo`, fileUploadForm)
       }
+
+      openEditModal()
     } catch (error) {
       console.error('Erro ao processar a requisição', error)
       throw error
