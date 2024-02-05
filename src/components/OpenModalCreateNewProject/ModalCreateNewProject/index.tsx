@@ -221,7 +221,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
             <UploadFileContent>
               <p>Selecione o conteúdo que você deseja fazer upload</p>
               <UploadFileInput>
-                <img src={props.preview} alt="" />
+                <img src={props.preview} alt="Prévia da Imagem" />
                 <input
                   type="file"
                   name="chooseFile"
