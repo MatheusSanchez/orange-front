@@ -7,13 +7,6 @@ export const EditProfileContainer = styled.div`
   align-items: center;
   padding: 1rem 0 5rem;
 
-  svg:first-child {
-    position: absolute;
-    color: ${(props) => props.theme['color-neutral-90']};
-    top: 6.7rem;
-    left: 1.5rem;
-  }
-
   @media (min-width: 978px) {
     max-width: 800px;
     margin: 0 auto;
@@ -27,7 +20,13 @@ export const AvatarContainer = styled.div`
   height: 122px;
   margin-bottom: 1.5rem;
 
-  > svg {
+  > img {
+    border-radius: 50%;
+    width: 122px;
+    height: 122px;
+  }
+
+  > label {
     width: 40px;
     height: 40px;
     position: absolute;
@@ -38,6 +37,10 @@ export const AvatarContainer = styled.div`
     padding: 0.5rem;
     border-radius: 50%;
     cursor: pointer;
+
+    input {
+      display: none;
+    }
   }
 `
 
@@ -97,9 +100,11 @@ export const TextContainer = styled.div`
   text-align: center;
 
   > h1 {
-    margin-bottom: 0.3rem;
-    color: ${(props) => props.theme['color-neutral-130']};
-    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5rem;
+    color: ${(props) => props.theme['color-neutral-120']};
   }
 
   > p {
@@ -107,9 +112,19 @@ export const TextContainer = styled.div`
     margin-bottom: 2rem;
     color: ${(props) => props.theme['color-neutral-90']};
     font-size: 0.75rem;
+
+    @media (min-width: 978px) {
+      width: 100%;
+    }
   }
 `
 
 export const StyledButton = styled(Button)`
   background: ${(props) => props.theme['color-secondary-100']} !important;
+  margin-top: 1.5rem !important;
+
+  &:disabled {
+    background: ${(props) => props.theme['btn-gray']} !important;
+    color: ${(props) => props.theme['btn-text-gray']} !important;
+  }
 `
