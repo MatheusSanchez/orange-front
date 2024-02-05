@@ -89,6 +89,9 @@ export function MyProjects() {
         tags: project.tags.join(', '),
         link: project.link,
         description: project.description,
+        date: project.created_at,
+        avatar: userData?.user.avatar_url,
+        author: userData?.user.name,
       },
       imageBanner: project.photo_url,
     })

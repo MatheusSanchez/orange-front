@@ -10,6 +10,9 @@ interface ModalState {
     tags: string
     link: string
     description: string
+    date?: string
+    avatar?: string
+    author?: string
   }
   imageBanner: string
 }
