@@ -13,6 +13,7 @@ import sucessSvg from '../../assets/sucess.svg'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useAuth } from '../../hooks/auth'
 import { api } from '../../lib/axios'
+import { OpenModalViewProject } from '../OpenModalViewProject'
 import {
   AlertContainer,
   BoxContainer,
@@ -24,6 +25,7 @@ import {
   LabelContent,
   MainContainer,
   ModalBox,
+  ShowProject,
   StyledButton,
   UploadFileContent,
   UploadFileInput,
@@ -288,6 +290,20 @@ export function EditProjectModal() {
   const [loadingAuth, setLoadingAuth] = useState(false)
   const [imgFile, setImgFile] = useState<File | null>(null)
   const [imgPreview, setImgPreview] = useState<string | undefined>(undefined)
+  const [openModal, setOpenModal] = useState(false)
+  const [imageBanner, setImageBanner] = useState('')
+  const [projectInfo, setProjectInfo] = useState({
+    title: '',
+    tags: '',
+    link: '',
+    description: '',
+    createdAt: '',
+  })
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target
+    setProjectInfo((prev) => ({ ...prev, [name]: value }))
+  }
 
   const {
     register,
@@ -330,7 +346,12 @@ export function EditProjectModal() {
       setImgFile(file)
       const imagePreview = URL.createObjectURL(file)
       setImgPreview(imagePreview)
+      setImageBanner(imagePreview)
     }
+  }
+
+  function handleOpenModal() {
+    setOpenModal(true)
   }
 
   useEffect(() => {
@@ -339,6 +360,16 @@ export function EditProjectModal() {
         const projectDataForEdit = projectData
 
         setImgPreview(projectDataForEdit.photo_url)
+
+        setProjectInfo({
+          title: projectDataForEdit.title || '',
+          tags: projectDataForEdit.tags
+            ? projectDataForEdit.tags.join(', ')
+            : '',
+          link: projectDataForEdit.link || '',
+          description: projectDataForEdit.description || '',
+          createdAt: projectDataForEdit.created_at || '',
+        })
 
         Object.keys(projectDataForEdit).forEach((key) => {
           if (key in projectDataForEdit) {
@@ -350,11 +381,14 @@ export function EditProjectModal() {
             )
           }
         })
+
+        // Atualizar o estado da imagem
+        setImageBanner(projectDataForEdit.photo_url)
       }
     } catch (error) {
       console.error('Error fetching project data', error)
     }
-  }, [projectData])
+  }, [projectData, setValue])
 
   return (
     <Modal open={editProjectModalState} onClose={closeEditProjectModal}>
@@ -375,6 +409,8 @@ export function EditProjectModal() {
                   shrink: true,
                 }}
                 {...register('title')}
+                // value={projectInfo.title}
+                onChange={handleChange}
               />
 
               {errors.title && (
@@ -417,6 +453,7 @@ export function EditProjectModal() {
                   shrink: true,
                 }}
                 {...register('link')}
+                onChange={handleChange}
               />
               <TextField
                 variant="outlined"
@@ -430,6 +467,7 @@ export function EditProjectModal() {
                   shrink: true,
                 }}
                 {...register('description')}
+                onChange={handleChange}
               />
             </InputsContainer>
             <UploadFileContent>
@@ -452,7 +490,9 @@ export function EditProjectModal() {
               </UploadFileInput>
             </UploadFileContent>
           </MainContainer>
-          <a style={{ cursor: 'pointer' }}>Visualizar publicação</a>
+          <ShowProject onClick={handleOpenModal}>
+            Visualizar publicação
+          </ShowProject>
           <ButtonsContainer>
             <StyledButton
               textcollor="save"
@@ -479,6 +519,12 @@ export function EditProjectModal() {
             </StyledButton>
           </ButtonsContainer>
         </FormContainer>
+        <OpenModalViewProject
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          projectInfo={projectInfo}
+          imageBanner={imageBanner}
+        />
       </ModalBox>
     </Modal>
   )

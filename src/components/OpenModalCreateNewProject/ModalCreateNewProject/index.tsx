@@ -20,6 +20,7 @@ import {
   LabelContent,
   MainContainer,
   ModalBox,
+  ShowProject,
   StyledButton,
   UploadFileContent,
   UploadFileInput,
@@ -220,7 +221,7 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
             <UploadFileContent>
               <p>Selecione o conteúdo que você deseja fazer upload</p>
               <UploadFileInput>
-                <img src={props.preview} alt="" />
+                <img src={props.preview} alt="Prévia da Imagem" />
                 <input
                   type="file"
                   name="chooseFile"
@@ -245,9 +246,9 @@ export function ModalCreateNewProject(props: ModalCreateNewProjectProps) {
               {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             </UploadFileContent>
           </MainContainer>
-          <a style={{ cursor: 'pointer' }} onClick={handleOpenModal}>
+          <ShowProject onClick={handleOpenModal}>
             Visualizar publicação
-          </a>
+          </ShowProject>
 
           <ButtonsContainer>
             <StyledButton

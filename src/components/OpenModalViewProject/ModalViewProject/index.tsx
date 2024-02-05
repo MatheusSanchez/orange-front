@@ -1,6 +1,7 @@
 import { Avatar, Chip, Modal } from '@mui/material'
 import { format } from 'date-fns'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 
 import avatarPlaceholder from '../../../assets/avatarPlaceholder.png'
 import { useAuth } from '../../../hooks/auth'
@@ -34,6 +35,7 @@ export function ModalViewProject(props: ModalViewProjectProps) {
   const { title, description, link, tags } = props.projectInfo
 
   const formattedDate = format(new Date(), 'dd/MM')
+  const formattedTags = tags.split(',').map((tag) => tag.trim())
   const isSmallScreen = window.innerWidth <= 978
 
   return (
@@ -72,7 +74,11 @@ export function ModalViewProject(props: ModalViewProjectProps) {
                 </UserDataContainer>
               </AvatarContainer>
 
-              <Chip label={tags} />
+              <div>
+                {formattedTags.map((tag, index) => (
+                  <Chip key={index} label={tag} sx={{ marginLeft: '.5rem' }} />
+                ))}
+              </div>
             </ProfileContent>
           </>
         ) : (
@@ -94,7 +100,11 @@ export function ModalViewProject(props: ModalViewProjectProps) {
                 </AvatarContainer>
               </ProfileContent>
               <h1>{title}</h1>
-              <Chip label={tags} />
+              <div>
+                {formattedTags.map((tag, index) => (
+                  <Chip key={index} label={tag} sx={{ marginLeft: '.5rem' }} />
+                ))}
+              </div>
             </CardProfile>
 
             <ImageBanner
@@ -105,7 +115,9 @@ export function ModalViewProject(props: ModalViewProjectProps) {
         )}
         <p>{description}</p>
         <h4>Download</h4>
-        <a href={link}>{link}</a>
+        <Link to={link} target="_blank">
+          {link}
+        </Link>
       </ModalBox>
     </Modal>
   )

@@ -190,3 +190,8 @@ export const ErrorMessage = styled.p`
   display: flex;
   align-self: center;
 `
+
+export const ShowProject = styled.a`
+  cursor: pointer;
+  color: ${(props) => props.theme['color-neutral-90']} !important;
+`
