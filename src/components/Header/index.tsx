@@ -42,7 +42,7 @@ export function Header() {
           <AccountMenu />
           <Tooltip title="Notificações">
             <IconButton>
-              <Badge badgeContent={985} color="error">
+              <Badge badgeContent={0} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
