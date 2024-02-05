@@ -1,10 +1,7 @@
 import { Avatar, Chip, Modal } from '@mui/material'
 import { format } from 'date-fns'
 import { Helmet } from 'react-helmet-async'
-import { Link } from 'react-router-dom'
 
-import avatarPlaceholder from '../../../assets/avatarPlaceholder.png'
-import { useAuth } from '../../../hooks/auth'
 import {
   AvatarContainer,
   CardProfile,
@@ -26,15 +23,20 @@ interface ModalViewProjectProps {
     tags: string
     link: string
     description: string
+    date?: string
+    avatar?: string
+    author?: string
   }
   imageBanner: string
 }
 
 export function ModalViewProject(props: ModalViewProjectProps) {
-  const { userData } = useAuth()
   const { title, description, link, tags } = props.projectInfo
 
-  const formattedDate = format(new Date(), 'dd/MM')
+  const orignalDate = props.projectInfo.date
+    ? new Date(props.projectInfo.date)
+    : null
+  const formattedDate = orignalDate ? format(orignalDate, 'dd/MM') : ''
   const formattedTags = tags.split(',').map((tag) => tag.trim())
   const isSmallScreen = window.innerWidth <= 978
 
@@ -62,14 +64,12 @@ export function ModalViewProject(props: ModalViewProjectProps) {
             <ProfileContent>
               <AvatarContainer>
                 <Avatar
-                  alt={`Foto avatar do usuário ${userData?.user.name} ${userData?.user.surname}`}
-                  src={avatarPlaceholder}
+                  alt={`Foto avatar do usuário ${props.projectInfo.author}`}
+                  src={props.projectInfo.avatar}
                   sx={{ width: 40, height: 40 }}
                 />
                 <UserDataContainer>
-                  <h3>
-                    {userData?.user.name} {userData?.user.surname}
-                  </h3>
+                  <h3>{props.projectInfo.author}</h3>
                   <span>{formattedDate}</span>
                 </UserDataContainer>
               </AvatarContainer>
@@ -87,14 +87,12 @@ export function ModalViewProject(props: ModalViewProjectProps) {
               <ProfileContent>
                 <AvatarContainer>
                   <Avatar
-                    alt={`Foto avatar do usuário ${userData?.user.name} ${userData?.user.surname}`}
-                    src={avatarPlaceholder}
+                    alt={`Foto avatar do usuário ${props.projectInfo.author}`}
+                    src={props.projectInfo.avatar}
                     sx={{ width: 40, height: 40 }}
                   />
                   <UserDataContainer>
-                    <h3>
-                      {userData?.user.name} {userData?.user.surname}
-                    </h3>
+                    <h3>{props.projectInfo.author}</h3>
                     <span>{formattedDate}</span>
                   </UserDataContainer>
                 </AvatarContainer>

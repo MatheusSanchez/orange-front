@@ -29,6 +29,9 @@ export function Feed() {
       tags: '',
       link: '',
       description: '',
+      date: '',
+      avatar: '',
+      author: '',
     },
     imageBanner: '',
   })
@@ -67,6 +70,9 @@ export function Feed() {
         tags: project.tags.join(', '),
         link: project.link,
         description: project.description,
+        date: project.created_at,
+        avatar: project.user.avatar_url,
+        author: project.user.name,
       },
       imageBanner: project.photo_url,
     })
