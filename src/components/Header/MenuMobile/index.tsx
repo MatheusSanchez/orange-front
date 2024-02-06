@@ -56,9 +56,7 @@ export function MenuMobile() {
         </MenuItem>
         <MenuItem onClick={() => navigate('/descobrir')}>Descobrir</MenuItem>
         <Divider sx={{ my: 0.5 }} />
-        <MenuItem onClick={() => navigate('/configuracoes')}>
-          Configurações
-        </MenuItem>
+        <MenuItem>Configurações</MenuItem>
       </Menu>
     </>
   )
